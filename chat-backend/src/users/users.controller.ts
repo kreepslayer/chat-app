@@ -13,15 +13,18 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import mongoose from 'mongoose';
-import type { UpdateUserDto } from './dto/UpdateUser.dto';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { User } from 'src/schemas/User.schema';
 
 @Controller('users')
 export class UsersController {
   constructor(private UsersService: UsersService) {}
   @Post()
-  @UsePipes(new ValidationPipe())
-  createUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
+  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    console.log(
+      '🚀 ~ UsersController ~ createUser ~ createUserDto:',
+      createUserDto,
+    );
     return this.UsersService.createUser(createUserDto);
   }
   @Get()
@@ -36,8 +39,14 @@ export class UsersController {
     if (!findUser) throw new HttpException('User not found', 404);
     return findUser;
   }
+  @Get('/:userName/:password')
+  async getUserByUserNameAndPassword(
+    @Param('userName') userName: string,
+    @Param('password') password: string,
+  ) {
+    return this.UsersService.getUserByUserNameAndPassword(userName, password);
+  }
   @Patch(':id')
-  @UsePipes(new ValidationPipe())
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const isIdValid = mongoose.Types.ObjectId.isValid(id);
   }

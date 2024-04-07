@@ -94,18 +94,21 @@
   font-weight: 600;
 }
 
-.wrapper .register-link {
+.wrapper .register-link,
+.wrapper .admin-link {
   font-size: 14.5px;
   text-align: center;
   margin: 20px 0 15px;
 }
 
-.register-link p a {
+.register-link p a,
+.wrapper .admin-link p a {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
 }
 
-.register-link p a:hover {
+.register-link p a:hover,
+.wrapper .admin-link p a:hover {
   text-decoration: underline;
 }

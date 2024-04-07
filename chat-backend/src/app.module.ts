@@ -13,7 +13,10 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { Get } from '@nestjs/common';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://127.0.0.1/admin'), userModule],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017', { dbName: 'admin' }),
+    userModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

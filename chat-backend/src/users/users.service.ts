@@ -8,14 +8,18 @@ import type { CreateUserDto } from './dto/CreateUser.dto';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
     const newUser = new this.userModel(createUserDto);
     return newUser.save();
   }
-  getUsers() {
+  async getUsers() {
     return this.userModel.find();
   }
-  getUserById(id: string) {
+  async getUserById(id: string) {
     return this.userModel.findById(id);
+  }
+  async getUserByUserNameAndPassword(userName: string, password: string) {
+    console.log(this.userModel.findOne({ userName, password }));
+    return this.userModel.findOne({ userName, password });
   }
 }
