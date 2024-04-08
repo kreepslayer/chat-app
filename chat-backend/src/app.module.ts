@@ -6,15 +6,22 @@ import {
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
 import { userModule } from './users/users.module';
-import { isValidMiddleware } from './middleware/isValid.middleware';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { Get } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017', { dbName: 'admin' }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
     userModule,
   ],
   controllers: [AppController],
@@ -25,8 +32,5 @@ export class AppModule implements NestModule {
     consumer
       .apply(LoggerMiddleware)
       .forRoutes({ path: 'users', method: RequestMethod.ALL });
-    consumer
-      .apply(isValidMiddleware)
-      .forRoutes({ path: 'users/:id', method: RequestMethod.GET });
   }
 }
