@@ -14,26 +14,43 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   constructor(private http: HttpClient) {}
-  signup(userName: string, password: string) {
+  avatarURL = '/none';
+  displayName: string = '';
+
+  register(
+    userName: string,
+    password: string,
+    displayName: string = userName,
+    avatarURL: string = '/none'
+  ) {
+    this.displayName = userName;
     return this.http
-      .post<any>('/api/users', {
+      .post<any>('/api/users/register', {
         userName,
         password,
+        displayName,
+        avatarURL,
       })
       .pipe(
-        map(({ token }) => {
-          localStorage.setItem('token', token);
-          return token;
+        map(({ access_token }) => {
+          localStorage.setItem('token', access_token);
+          return access_token;
         })
       );
   }
 
   login(userName: string, password: string) {
-    return this.http.get<any>(`/api/users/${userName}/${password}`, {}).pipe(
-      map(({ token }) => {
-        localStorage.setItem('token', token);
-        return token;
+    this.displayName = userName;
+    this.avatarURL = '/none';
+    return this.http
+      .post<any>(`/api/users/login`, {
+        userName,
+        password,
       })
-    );
+      .subscribe((data) => {
+        console.log(data);
+        console.log(data.success);
+        localStorage.setItem('token', data.access_token);
+      });
   }
 }

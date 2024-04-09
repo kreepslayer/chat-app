@@ -17,7 +17,7 @@ export class RegisterComponent {
     console.log(passCheck.value, this.password);
     if (passCheck.value == this.password) {
       this.authService
-        .signup(this.username, this.password)
+        .register(this.username, this.password)
         .subscribe((data) => {
           console.log(data); // log server response
           console.log('no errors');

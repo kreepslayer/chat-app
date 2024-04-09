@@ -10,17 +10,22 @@ import {
   HttpException,
   Patch,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { User } from '../models/user.interfase';
 import { map, type Observable, catchError, throwError, of } from 'rxjs';
+import { hasRoles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 // import { User } from 'src/schemas/User.schema';
 
 @Controller('users')
 export class UsersController {
   constructor(private UsersService: UsersService) {}
 
-  @Post()
+  //'http://localhost:3000/users + {user}'
+  @Post('register')
   createUser(@Body() user: User): Observable<User | Object> {
     return this.UsersService.createUser(user).pipe(
       map((user: User) => user),
@@ -28,21 +33,27 @@ export class UsersController {
     );
   }
 
+  // 'http://localhost:3000/users/login'
   @Post('login')
   @UsePipes(ValidationPipe)
   login(@Body() user: User): Observable<Object> {
     return this.UsersService.login(user).pipe(
       map((jwt: string) => {
-        return { access_token: jwt };
+        return { access_token: jwt, success: true };
       }),
+      catchError((err) => throwError(new HttpException(err.message, 401))),
     );
   }
 
+  // 'http://localhost:3000/users/:id'
   @Get(':id')
   getUser(@Param() params): Observable<User> {
     return this.UsersService.getUserById(params.id);
   }
 
+  // 'http://localhost:3000/users'
+  @hasRoles('Admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   getAllUsers(): Observable<User[]> {
     return this.UsersService.findAll();
@@ -57,4 +68,6 @@ export class UsersController {
   updateUser(@Param('id') id: string, @Body() user: User): Observable<any> {
     return this.UsersService.updateUser(+id, user);
   }
+  //TODO
+  // @Patch(':id')
 }
