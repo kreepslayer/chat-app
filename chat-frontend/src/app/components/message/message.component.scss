@@ -1,0 +1,39 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: auto;
+  min-width: 500px;
+  max-width: 500px;
+  min-height: 40px;
+  max-height: auto;
+  border-radius: 10px;
+  background: rgba($color: #000, $alpha: 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 5px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+right-side {
+  float: right;
+}
+left-side {
+  float: left;
+}
+.text {
+  width: 100%;
+  max-width: 500px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+.time {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+  margin-left: 10px;
+}
