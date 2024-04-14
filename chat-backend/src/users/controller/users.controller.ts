@@ -1,72 +1,63 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  UsePipes,
-  ValidationPipe,
-  Param,
-  HttpException,
-  Patch,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import { UsersService } from '../service/users.service';
-import { User } from '../models/user.interfase';
-import { map, type Observable, catchError, throwError, of } from 'rxjs';
-import { hasRoles } from 'src/auth/decorator/roles.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Body, Controller, Delete, Get, Post, UsePipes, ValidationPipe, Param, HttpException, Patch, Put, UseGuards } from "@nestjs/common";
+import { UsersService } from "../service/users.service";
+import { User, UserRole } from "../models/user.interfase";
+import { map, type Observable, catchError, throwError, of } from "rxjs";
+import { hasRoles } from "src/auth/decorator/roles.decorator";
+import { JwtAuthGuard } from "src/auth/guards/jwt-guard";
+import { RolesGuard } from "src/auth/guards/roles.guard";
 // import { User } from 'src/schemas/User.schema';
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
   constructor(private UsersService: UsersService) {}
 
   //'http://localhost:3000/users + {user}'
-  @Post('register')
+  @Post("register")
   createUser(@Body() user: User): Observable<User | Object> {
     return this.UsersService.createUser(user).pipe(
       map((user: User) => user),
-      catchError((err) => of({ error: err.message })),
+      catchError(err => of({ error: err.message })),
     );
   }
 
   // 'http://localhost:3000/users/login'
-  @Post('login')
+  @Post("login")
   @UsePipes(ValidationPipe)
   login(@Body() user: User): Observable<Object> {
     return this.UsersService.login(user).pipe(
       map((jwt: string) => {
         return { access_token: jwt, success: true };
       }),
-      catchError((err) => throwError(new HttpException(err.message, 401))),
+      catchError(err => throwError(new HttpException(err.message, 401))),
     );
   }
 
   // 'http://localhost:3000/users/:id'
-  @Get(':id')
+  @Get(":id")
   getUser(@Param() params): Observable<User> {
     return this.UsersService.getUserById(params.id);
   }
 
   // 'http://localhost:3000/users'
-  @hasRoles('Admin')
+  @hasRoles("admin")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   getAllUsers(): Observable<User[]> {
     return this.UsersService.findAll();
   }
 
-  @Delete(':id')
-  deleteUser(@Param('id') id: string): Observable<any> {
+  @Delete(":id")
+  deleteUser(@Param("id") id: string): Observable<any> {
     return this.UsersService.deleteUser(+id);
   }
 
-  @Put(':id')
-  updateUser(@Param('id') id: string, @Body() user: User): Observable<any> {
+  @Put(":id")
+  updateUser(@Param("id") id: string, @Body() user: User): Observable<any> {
     return this.UsersService.updateUser(+id, user);
+  }
+  @Put(":id/role")
+  updateUserRole(@Param("id") id: string, @Body() user: User): Observable<any> {
+    return this.UsersService.updateUserRole(+id, user);
   }
   //TODO
   // @Patch(':id')

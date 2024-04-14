@@ -4,4 +4,9 @@ export interface User {
   displayName?: string;
   avatarURL?: string;
   password?: string;
+  role?: UserRole;
+}
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
 }
