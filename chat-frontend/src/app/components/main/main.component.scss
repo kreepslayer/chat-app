@@ -154,14 +154,15 @@
   padding-left: 10px;
   padding-right: 10px;
   overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none !important;
+  scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
     display: none;
   }
   margin-top: 5px;
   margin-left: 10px;
-  overflow-y: hidden;
-  overflow-x: hidden;
 }
 .sidebar ul {
   list-style: none;

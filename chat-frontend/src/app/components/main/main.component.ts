@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CurrentUserService } from '../../services/currentUser.service';
+import type { User } from '../../models/user.interface';
 
 @Component({
   selector: 'app-main',
@@ -22,5 +24,20 @@ export class MainComponent {
     if (searchInput) {
       searchPar?.classList.remove('activeSearch');
     }
+  }
+  constructor(public currentUserService: CurrentUserService) {}
+  currentUser: User = {
+    id: 0,
+    userName: '',
+    displayName: '',
+    avatarURL: '',
+    role: '',
+  };
+  ngOnInit() {
+    this.currentUser = this.currentUserService.getCurrentUser();
+    console.log(
+      '🚀 ~ MainComponent ~ ngOnInit ~ this.currentUser:',
+      this.currentUser
+    );
   }
 }

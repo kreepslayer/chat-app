@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-message',
@@ -6,9 +6,12 @@ import { Component } from '@angular/core';
   styleUrl: './message.component.scss',
 })
 export class MessageComponent {
-  message: string =
-    'Message text dsjgui9sdjgioashdpgu9isahdgioyjebrt87hmuwhyt,nyjhr9ekg7o80erwu9hygjewr98gu7i9';
-  time: string = new Date().getHours() + ':' + new Date().getMinutes();
+  @Input() message =
+    'Message text lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+  @Input() time = new Date().getHours() + ':' + new Date().getMinutes();
+  Users = ['User1', 'User2'];
+  rndUser = Math.floor(Math.random() * this.Users.length);
+  username: string = this.Users[this.rndUser];
 
   constructor() {}
 

@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CurrentUserService } from './currentUser.service';
 export interface loginForm {
   userName: string;
   password: string;
@@ -23,7 +24,10 @@ export interface User {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public currentUserService: CurrentUserService
+  ) {}
   avatarURL = '/none';
   displayName: string = '';
 
@@ -34,6 +38,8 @@ export class AuthService {
     return this.http.post<any>('/api/users/register', user).pipe(
       map((data) => {
         console.log(`data --> ${JSON.stringify(data)}`);
+        console.log('🚀 ~ AuthService ~ map ~ data.FullUser:', data.FullUser);
+        this.currentUserService.currentUser = data.FullUser;
       })
       // map(({ access_token }) => {
       //   localStorage.setItem('token', access_token);
@@ -52,9 +58,11 @@ export class AuthService {
       })
       .pipe(
         map((data) => {
-          console.log(data);
-          console.log(data.success);
+          console.log(`data --> ${JSON.stringify(data)}`);
+          console.log(`data.success --> ${data.success}`);
           localStorage.setItem('token', data.access_token);
+          console.log('🚀 ~ AuthService ~ map ~ data.FullUser:', data.FullUser);
+          this.currentUserService.currentUser = data.FullUser;
         })
       );
   }

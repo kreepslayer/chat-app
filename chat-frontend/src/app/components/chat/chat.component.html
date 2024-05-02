@@ -1,10 +1,11 @@
 <div class="comp">
   <div class="avatar"><i class="bx bx-user-circle"></i></div>
   <div class="content">
-    <div class="name">username</div>
-    <div class="message">text message</div>
+    <div class="name">{{ username }}</div>
+    <div class="message">{{ lastMessage }}</div>
   </div>
   <div class="notifications">
-    <span>99+</span>
+    <span *ngIf="notifications > 99">99+</span>
+    <span *ngIf="notifications < 99">{{ notifications }}</span>
   </div>
 </div>

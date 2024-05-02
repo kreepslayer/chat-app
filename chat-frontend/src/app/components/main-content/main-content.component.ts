@@ -1,4 +1,6 @@
+//@ts-nocheck
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-content',
@@ -6,7 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent {
-  message: string = '';
   sendMessage() {}
   focus() {
     let searchInput: HTMLInputElement | null =
@@ -23,5 +24,18 @@ export class MainContentComponent {
     if (searchInput) {
       searchPar?.classList.remove('activeSearch');
     }
+  }
+
+  constructor(private router: Router) {}
+  message: string = ``;
+  ngOnInit() {
+    let main = document.querySelector('.main-main');
+    let last: HTMLElement | null = document.querySelector('.last');
+    console.log('🚀 ~ MainContentComponent ~ ngOnInit ~ last:', last);
+    console.log('🚀 ~ MainContentComponent ~ ngOnInit ~ main:', main);
+    if (last && main) {
+      document.querySelector('.last')?.scrollIntoView();
+    }
+    //TODO scroll to bottom
   }
 }

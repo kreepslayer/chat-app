@@ -6,24 +6,63 @@ import {
   FormControl,
   Validators,
   FormBuilder,
+  type AbstractControl,
+  type ValidationErrors,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
+
+class CustomValidators {
+  static passwordContainsNumber(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    const regex = /\d/;
+    if (regex.test(control.value) && control.value !== null) {
+      return null;
+    } else {
+      return { passwordInvalid: true };
+    }
+  }
+  static passwordsMatch(control: AbstractControl): ValidationErrors | null {
+    const pass = control.get('password')?.value;
+    const confirmPass = control.get('passwordConfirm')?.value;
+    if (pass === confirmPass && pass !== null && confirmPass !== null) {
+      return null;
+    }
+    return { passwordsMismatch: true };
+  }
+}
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
+  providers: [],
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup = this.fb.group({
-    userName: [null, [Validators.required, Validators.minLength(4)]],
-    password: [null, [Validators.required, Validators.minLength(8)]],
-    passwordConfirm: [null, [Validators.required, Validators.minLength(8)]],
-  });
-  // = new FormGroup({
-  //   userName: new FormControl('', [Validators.required]),
-  //   password: new FormControl('', [Validators.required]),
-  // });
+  registerForm: FormGroup = this.fb.group(
+    {
+      userName: [null, [Validators.required, Validators.minLength(4)]],
+      password: [
+        null,
+        [
+          Validators.required,
+          Validators.minLength(8),
+          CustomValidators.passwordContainsNumber,
+        ],
+      ],
+      passwordConfirm: [
+        null,
+        [
+          Validators.required,
+          Validators.minLength(8),
+          CustomValidators.passwordContainsNumber,
+        ],
+      ],
+    },
+    {
+      validators: CustomValidators.passwordsMatch,
+    }
+  );
 
   constructor(
     private authService: AuthService,
