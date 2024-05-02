@@ -133,3 +133,27 @@
 .back i:hover {
   cursor: pointer;
 }
+
+h3 {
+  overflow: hidden;
+}
+
+.errors {
+  color: red;
+  margin-top: 10px;
+  position: absolute;
+  top: 20%;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.open {
+  opacity: 1;
+  transition: 0.5s;
+}
+
+.closed {
+  opacity: 0;
+  transition: 0.5s;
+}

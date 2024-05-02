@@ -5,6 +5,7 @@ import { map, type Observable, catchError, throwError, of } from "rxjs";
 import { hasRoles } from "src/auth/decorator/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-guard";
 import { RolesGuard } from "src/auth/guards/roles.guard";
+import { log } from "console";
 // import { User } from 'src/schemas/User.schema';
 
 @Controller("users")
@@ -24,19 +25,22 @@ export class UsersController {
   @Post("login")
   @UsePipes(ValidationPipe)
   login(@Body() user: User): Observable<Object> {
+    let FullUser = this.UsersService.getUserByUserName(user.userName).subscribe(data => (FullUser = data));
+    console.log("🚀 ~ UsersController ~ login ~ user.userName:", user.userName);
+    console.log("🚀 ~ UsersController ~ login ~ FullUser:", FullUser);
     return this.UsersService.login(user).pipe(
       map((jwt: string) => {
-        return { access_token: jwt, success: true };
+        return { access_token: jwt, success: true, FullUser: FullUser };
       }),
       catchError(err => throwError(new HttpException(err.message, 401))),
     );
   }
 
   // 'http://localhost:3000/users/:id'
-  @Get(":id")
-  getUser(@Param() params): Observable<User> {
-    return this.UsersService.getUserById(params.id);
-  }
+  // @Get(":id")
+  // getUser(@Param() params): Observable<User> {
+  //   return this.UsersService.getUserById(params.id);
+  // }
 
   // 'http://localhost:3000/users'
   @hasRoles("admin")
@@ -61,4 +65,9 @@ export class UsersController {
   }
   //TODO
   // @Patch(':id')
+
+  //get user by username
+  getUserByUserName(userName: string): Observable<User> {
+    return this.UsersService.getUserByUserName(userName);
+  }
 }

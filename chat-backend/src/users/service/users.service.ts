@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "../models/user.interfase";
+import { User, UserRole } from "../models/user.interfase";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../models/user.entity";
 import { Repository } from "typeorm";
@@ -55,6 +55,7 @@ export class UsersService {
     );
   }
   getUserById(id: number): Observable<User> {
+    log(`id: ${id}`);
     return from(this.userRepository.findOne({ where: { id } })).pipe(
       map((user: User) => {
         const { password, ...result } = user;
@@ -94,5 +95,9 @@ export class UsersService {
 
   updateUserRole(id: number, user: User): Observable<any> {
     return from(this.userRepository.update(id, user));
+  }
+
+  ifAdmin(username: string): Observable<User> {
+    return from(this.userRepository.findOne({ where: { userName: username, role: UserRole.ADMIN } }));
   }
 }
