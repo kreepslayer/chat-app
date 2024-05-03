@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ChatComponent {
   constructor() {}
-  @Input() username: string = 'testName';
-  @Input() lastMessage: string = 'testMessage';
-  @Input() notifications: number = 10;
+  @Input() username: string = '';
+  @Input() lastMessage: string = '';
+  @Input() notifications: number = 0;
 }

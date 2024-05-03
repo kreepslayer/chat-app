@@ -6,12 +6,10 @@ import { Component, Input } from '@angular/core';
   styleUrl: './message.component.scss',
 })
 export class MessageComponent {
-  @Input() message =
-    'Message text lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+  @Input() message: string = '';
   @Input() time = new Date().getHours() + ':' + new Date().getMinutes();
-  Users = ['User1', 'User2'];
-  rndUser = Math.floor(Math.random() * this.Users.length);
-  username: string = this.Users[this.rndUser];
+  @Input() Username = '';
+  @Input() last = false;
 
   constructor() {}
 

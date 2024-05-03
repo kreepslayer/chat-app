@@ -11,6 +11,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { MainContentComponent } from './components/main-content/main-content.component';
 import { MessageComponent } from './components/message/message.component';
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
     FormsModule,
     ReactiveFormsModule,
     NgxPageScrollCoreModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
