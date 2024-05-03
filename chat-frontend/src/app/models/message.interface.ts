@@ -4,4 +4,5 @@ export interface Message {
   text: string;
   time: string;
   sender: User;
+  last: boolean;
 }

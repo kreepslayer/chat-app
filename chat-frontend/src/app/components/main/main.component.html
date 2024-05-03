@@ -22,19 +22,12 @@
     <div class="sidebar">
       <ul>
         <li>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
-          <app-chat></app-chat>
+          <app-chat
+            *ngFor="let chat of chatsInSidebar"
+            [username]="chat.username"
+            [lastMessage]="chat.lastMessageText"
+            [notifications]="chat.notifications"
+          ></app-chat>
         </li>
       </ul>
     </div>

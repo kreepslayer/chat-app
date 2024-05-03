@@ -85,7 +85,7 @@
 .main-main {
   height: calc(100% - 140px);
   overflow-y: scroll;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -97,6 +97,10 @@
   backdrop-filter: blur(20px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   transition: 0.4s;
+}
+
+.activeSearch input {
+  font-size: 18px;
 }
 
 .main-main::-webkit-scrollbar {
