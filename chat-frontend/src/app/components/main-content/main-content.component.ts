@@ -1,11 +1,10 @@
-//@ts-nocheck
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { ActiveChat } from '../../models/activeChat.interface';
+import { animate, style, trigger } from '@angular/animations';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CurrentUserService } from '../../services/currentUser.service';
+import { Router } from '@angular/router';
 import { transition } from '@angular/animations';
-import { trigger, style, animate } from '@angular/animations';
-
+import type { Message } from '../../models/message.interface';
 @Component({
   selector: 'app-main-content',
   templateUrl: './main-content.component.html',
@@ -40,7 +39,6 @@ export class MainContentComponent {
 
     this.activeChat.messages.push(messageSending);
     this.messageToSend = '';
-    this.updateLast();
 
     // add to service
     setTimeout(() => {
@@ -71,12 +69,6 @@ export class MainContentComponent {
       searchPar?.classList.remove('activeSearch');
     }
   }
-  updateLast() {
-    this.activeChat.messages.forEach((message) => {
-      message.last = false;
-    });
-    this.activeChat.messages[this.activeChat.messages.length - 1].last = true;
-  }
 
   constructor(
     private router: Router,
@@ -95,197 +87,11 @@ export class MainContentComponent {
         });
       }
     }, 1000);
-    this.activeChat.messages.forEach((message) => {
-      message.last = false;
-    });
-    this.activeChat.messages[this.activeChat.messages.length - 1].last = true;
   }
   activeChat: ActiveChat = {
     username: 'TestUser',
     messages: [
       {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
-        text: 'Test message',
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
-        },
-      },
-      {
-        username: 'TestUser',
         text: 'Test message',
         time: new Date().getHours() + ':' + new Date().getMinutes(),
         sender: {

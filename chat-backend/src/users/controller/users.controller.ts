@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, UsePipes, ValidationPipe, Param, HttpException, Patch, Put, UseGuards } from "@nestjs/common";
 import { UsersService } from "../service/users.service";
 import { User, UserRole } from "../models/user.interfase";
-import { map, type Observable, catchError, throwError, of } from "rxjs";
+import { map, Observable, catchError, throwError, of } from "rxjs";
 import { hasRoles } from "src/auth/decorator/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-guard";
 import { RolesGuard } from "src/auth/guards/roles.guard";
@@ -25,7 +25,7 @@ export class UsersController {
   @Post("login")
   @UsePipes(ValidationPipe)
   login(@Body() user: User): Observable<Object> {
-    let FullUser = this.UsersService.getUserByUserName(user.userName).subscribe(data => (FullUser = data));
+    let FullUser = this.UsersService.getUserByUserName(user.userName).subscribe({ next: data => (FullUser = data) });
     console.log("🚀 ~ UsersController ~ login ~ user.userName:", user.userName);
     console.log("🚀 ~ UsersController ~ login ~ FullUser:", FullUser);
     return this.UsersService.login(user).pipe(
@@ -67,7 +67,8 @@ export class UsersController {
   // @Patch(':id')
 
   //get user by username
-  getUserByUserName(userName: string): Observable<User> {
+  @Get(":userName")
+  getUserByUserName(@Param("userName") userName: string): Observable<User> {
     return this.UsersService.getUserByUserName(userName);
   }
 }
