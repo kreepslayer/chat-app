@@ -3,10 +3,5 @@
     "sideBar.background": "#23262E",
     "editorSuggestWidget.background": "#231739",
     "terminalCursor.foreground": "#2A9C66"
-  },
-  "CodeGPT.apiKey": "Ollama",
-  "CodeGPT.Autocomplete.provider": "Ollama - codegpt/deepseek-coder-1.3b-typescript",
-  "CodeGPT.Autocomplete.maxTokens": 1510,
-  "CodeGPT.Autocomplete.enabled": true,
-  "CodeGPT.Autocomplete.suggestionDelay": 3000
+  }
 }
