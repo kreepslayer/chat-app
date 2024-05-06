@@ -2,7 +2,7 @@ import { User } from './user.interface';
 import { Message } from './message.interface';
 
 export interface Chat {
-  User1: User;
-  User2: User;
+  User1Name: string;
+  User2Name: string;
   Messages: Message[];
 }

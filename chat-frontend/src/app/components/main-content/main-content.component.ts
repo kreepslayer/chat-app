@@ -1,10 +1,11 @@
 import { ActiveChat } from '../../models/activeChat.interface';
 import { animate, style, trigger } from '@angular/animations';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CurrentUserService } from '../../services/currentUser.service';
 import { Router } from '@angular/router';
 import { transition } from '@angular/animations';
-import type { Message } from '../../models/message.interface';
+import { Message } from '../../models/message.interface';
+import { Chat } from '../../models/chat.interface';
 @Component({
   selector: 'app-main-content',
   templateUrl: './main-content.component.html',
@@ -29,6 +30,7 @@ import type { Message } from '../../models/message.interface';
   ],
 })
 export class MainContentComponent {
+  @Input() chats: Chat[] = [];
   sendMessage() {
     console.log(this.CurrentUserService.getCurrentUser());
     let messageSending: Message = {
@@ -79,14 +81,13 @@ export class MainContentComponent {
     setTimeout(() => {
       let main = document.querySelector('.main-main');
       let last: HTMLElement | null = document.querySelector('#endOFChat');
-      console.log('🚀 ~ MainContentComponent ~ ngOnInit ~ last:', last);
-      console.log('🚀 ~ MainContentComponent ~ ngOnInit ~ main:', main);
       if (last && main) {
         document.querySelector('#endOFChat')?.scrollIntoView({
           behavior: 'smooth',
         });
       }
     }, 1000);
+    console.log(`chats: ${this.chats}`);
   }
   activeChat: ActiveChat = {
     username: 'TestUser',
