@@ -5,52 +5,26 @@
     </div>
     <div class="text-block">
       <div class="name">
-        <span>username</span>
+        <span>{{ activeChat.username }}</span>
       </div>
       <div class="online">
         <span>online</span>
       </div>
     </div>
   </div>
-  <div class="main">
-    <div class="messages">
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="right-side"></app-message>
-
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="right-side"></app-message>
-
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="left-side"></app-message>
-      <app-message class="right-side"></app-message>
-      <app-message class="right-side"></app-message>
-    </div>
+  <div class="main-main">
+    <app-message
+      *ngFor="let message of activeChat.messages"
+      [message]="message.text"
+      [Username]="message.sender.displayName"
+      [time]="message.time"
+      [@messageAnimation]
+    ></app-message>
+    <div id="endOFChat"></div>
   </div>
   <div class="footer">
     <input
-      [(ngModel)]="message"
+      [(ngModel)]="messageToSend"
       type="text"
       placeholder="Message"
       (keyup.enter)="sendMessage()"

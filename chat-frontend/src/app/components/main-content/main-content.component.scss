@@ -80,8 +80,13 @@
   transition: 0.4s;
 }
 
-.main {
+.main-main {
   height: calc(100% - 140px);
+  overflow-y: scroll;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
 .activeSearch {
@@ -90,17 +95,11 @@
   backdrop-filter: blur(20px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   transition: 0.4s;
+  input {
+    font-size: 18px;
+  }
 }
-.messages {
-  height: calc(100%);
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-}
-.messages {
-  scrollbar-width: none; /* firefox */
-}
-.messages::-webkit-scrollbar {
+.main-main::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -116,4 +115,11 @@
   flex-direction: column;
   float: right;
   align-items: flex-end;
+}
+
+.main-main div {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+  display: flex;
 }

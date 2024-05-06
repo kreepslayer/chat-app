@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '../models/user.interfase';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../models/user.entity';
-import { Repository } from 'typeorm';
-import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../../auth/services/auth.service';
+import { Injectable } from "@nestjs/common";
+import { User, UserRole } from "../models/user.interfase";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UserEntity } from "../models/user.entity";
+import { Repository } from "typeorm";
+import { catchError, from, map, Observable, switchMap, throwError } from "rxjs";
+import { AuthService } from "../../auth/services/auth.service";
+import { log } from "console";
 
 @Injectable()
 export class UsersService {
@@ -24,13 +25,14 @@ export class UsersService {
         newUser.password = passwordHash;
         newUser.displayName = user.displayName;
         newUser.avatarURL = user.avatarURL;
+        newUser.role = user.role;
 
         return from(this.userRepository.save(newUser)).pipe(
           map((user: User) => {
             const { password, ...result } = user;
             return result;
           }),
-          catchError((err) => throwError(err)),
+          catchError(err => throwError(err)),
         );
       }),
     );
@@ -53,6 +55,7 @@ export class UsersService {
     );
   }
   getUserById(id: number): Observable<User> {
+    log(`id: ${id}`);
     return from(this.userRepository.findOne({ where: { id } })).pipe(
       map((user: User) => {
         const { password, ...result } = user;
@@ -64,17 +67,14 @@ export class UsersService {
   login(user: User): Observable<string> {
     return this.validateUser(user.userName, user.password).pipe(
       switchMap((user: User) => {
-        if (user)
-          return this.AuthService.generateJWT(user).pipe(
-            map((jwt: string) => jwt),
-          );
-        else return 'Wrong credentials';
+        if (user) return this.AuthService.generateJWT(user).pipe(map((jwt: string) => jwt));
+        else return "Wrong credentials";
       }),
     );
   }
   validateUser(userName: string, password: string): Observable<User> {
     return this.getUserByUserName(userName).pipe(
-      switchMap((user) =>
+      switchMap(user =>
         this.AuthService.comparePasswords(password, user.password).pipe(
           map((match: boolean) => {
             if (match) {
@@ -91,5 +91,13 @@ export class UsersService {
 
   getUserByUserName(userName: string): Observable<User> {
     return from(this.userRepository.findOne({ where: { userName } }));
+  }
+
+  updateUserRole(id: number, user: User): Observable<any> {
+    return from(this.userRepository.update(id, user));
+  }
+
+  ifAdmin(username: string): Observable<User> {
+    return from(this.userRepository.findOne({ where: { userName: username, role: UserRole.ADMIN } }));
   }
 }

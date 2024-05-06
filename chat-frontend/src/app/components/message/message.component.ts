@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-message',
@@ -6,9 +6,10 @@ import { Component } from '@angular/core';
   styleUrl: './message.component.scss',
 })
 export class MessageComponent {
-  message: string =
-    'Message text dsjgui9sdjgioashdpgu9isahdgioyjebrt87hmuwhyt,nyjhr9ekg7o80erwu9hygjewr98gu7i9';
-  time: string = new Date().getHours() + ':' + new Date().getMinutes();
+  @Input() message: string = '';
+  @Input() time = new Date().getHours() + ':' + new Date().getMinutes();
+  @Input() Username = '';
+  @Input() last = false;
 
   constructor() {}
 
