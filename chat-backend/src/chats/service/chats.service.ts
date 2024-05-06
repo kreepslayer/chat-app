@@ -12,9 +12,7 @@ import { log } from "console";
 export class ChatsService {
   constructor(@InjectRepository(ChatEntity) private readonly ChatRepository: Repository<ChatEntity>) {}
   getUserChats(userName: string): Observable<Chat[]> {
-    let chat = from(this.ChatRepository.find({ where: [{ User1Name: userName }, { User2Name: userName }] }));
-
-    return chat;
+    return from(this.ChatRepository.find({ where: [{ User1Name: userName }, { User2Name: userName }] }));
   }
 
   //get chat by 2 users
@@ -49,5 +47,9 @@ export class ChatsService {
   //delete all chats
   deleteAllChats(): Observable<any> {
     return from(this.ChatRepository.delete({}));
+  }
+
+  getAllChats(): Observable<Chat[]> {
+    return from(this.ChatRepository.find());
   }
 }

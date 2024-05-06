@@ -38,5 +38,6 @@ import { MessageEntity } from "./chats/models/message.entity";
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes({ path: "users", method: RequestMethod.ALL });
+    consumer.apply(LoggerMiddleware).forRoutes({ path: "chats", method: RequestMethod.ALL });
   }
 }

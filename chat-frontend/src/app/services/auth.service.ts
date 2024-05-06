@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { map, mergeMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CurrentUserService } from './currentUser.service';
+import type { Chat } from '../models/chat.interface';
 export interface loginForm {
   userName: string;
   password: string;
@@ -26,7 +27,7 @@ export interface User {
 export class AuthService {
   constructor(
     private http: HttpClient,
-    public currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService
   ) {}
   avatarURL = '/none';
   displayName: string = '';
@@ -58,11 +59,15 @@ export class AuthService {
       })
       .pipe(
         map((data) => {
-          console.log(`data --> ${JSON.stringify(data)}`);
-          console.log(`data.success --> ${data.success}`);
+          console.log(`data -> ${JSON.stringify(data)}`);
+          console.log(`data.success -> ${data.success}`);
           localStorage.setItem('token', data.access_token);
-          console.log('🚀 ~ AuthService ~ map ~ data.FullUser:', data.FullUser);
+          localStorage.setItem('userName', data.FullUser.userName);
           this.currentUserService.currentUser = data.FullUser;
+          console.log(
+            '🚀 ~ AuthService ~ map ~ this.currentUserService.currentUser(from authService):',
+            this.currentUserService.currentUser
+          );
         })
       );
   }

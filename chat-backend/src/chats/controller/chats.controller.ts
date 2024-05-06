@@ -3,14 +3,24 @@ import { ChatsService } from "../service/chats.service";
 import { Chat } from "../models/chat.interface";
 import { Message } from "../models/message.interface";
 import { map, Observable, catchError, throwError, of } from "rxjs";
+import { log } from "console";
 
 @Controller("chats")
 export class ChatsController {
   constructor(private readonly ChatsService: ChatsService) {}
   //get User chats
   @Get(":userName")
-  getUserChats(@Param("userName") userName: string): Observable<Chat[]> {
+  getUserChats(@Param("userName") userName: string): Observable<Chat[] | void> {
+    log(`userName: ${userName}`);
+    log("getUserChats res: ", this.ChatsService.getUserChats(userName).pipe(map((data: Chat[]) => data)));
     return this.ChatsService.getUserChats(userName);
+  }
+
+  @Get()
+  getAllChats(): Observable<Chat[]> {
+    log("getAllChats req");
+    log("getAllChats res: ", this.ChatsService.getAllChats());
+    return this.ChatsService.getAllChats();
   }
 
   //add message to chat
