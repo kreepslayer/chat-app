@@ -78,9 +78,7 @@ export class CurrentUserService {
   public currentUser: User = {
     id: 0,
     userName: '',
-    displayName: '',
-    avatarURL: '',
-    role: '',
+    password: '',
   };
 
   setCurrentUser(user: User) {
@@ -95,9 +93,7 @@ export class CurrentUserService {
     this.currentUser = {
       id: 0,
       userName: '',
-      displayName: '',
-      avatarURL: '',
-      role: '',
+      password: '',
     };
   }
 }

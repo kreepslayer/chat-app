@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { ChatsService } from '../../services/chats.service';
+import { DbService } from '../../services/db.service';
 
 @Component({
   selector: 'app-main',
@@ -18,24 +19,14 @@ import { ChatsService } from '../../services/chats.service';
 export class MainComponent implements OnInit {
   constructor(
     private currentUserService: CurrentUserService,
-    private chatsService: ChatsService
+    private chatsService: ChatsService,
+    private dbService: DbService
   ) {}
   //animations
   isExpanded: boolean = false;
   state: string = 'initial';
   ngOnInit() {
-    this.currentUser = this.currentUserService.getCurrentUser();
-    this.chatsInSidebar = this.currentUserService.getChatsInSidebar();
-    // this.chatsService
-    //   .getChatsForUser(this.currentUser.userName)
-    //   .subscribe((chats: Chat[]) => {
-    //     //  'chats' - массив объектов Chat
-    //     console.log(typeof chats);
-    //     console.log(chats.length); //  length
-    //     console.log(chats); // весь массив
-    //     this.chats = chats;
-    //   });
-    this.chats = this.chatsService.getChats(this.currentUser.userName);
+    this.dbService.sendMessage();
   }
   expand() {
     this.isExpanded = !this.isExpanded;
@@ -71,9 +62,7 @@ export class MainComponent implements OnInit {
   currentUser: User = {
     id: 0,
     userName: '',
-    displayName: '',
-    avatarURL: '',
-    role: '',
+    password: '',
   };
   chatsInSidebar: chatInSidebar[] = [
     {

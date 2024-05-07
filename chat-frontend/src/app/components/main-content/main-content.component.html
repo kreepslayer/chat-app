@@ -16,7 +16,7 @@
     <app-message
       *ngFor="let message of activeChat.messages"
       [message]="message.text"
-      [Username]="message.sender.displayName"
+      [Username]="message.sender.userName"
       [time]="message.time"
       [@messageAnimation]
     ></app-message>

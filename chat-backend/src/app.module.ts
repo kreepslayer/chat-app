@@ -1,14 +1,14 @@
-import { Module, MiddlewareConsumer, NestModule, RequestMethod } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { userModule } from "./users/users.module";
-import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { chatsModule } from "./chats/chats.module";
 import { UserEntity } from "./users/models/user.entity";
-import { ChatEntity } from "./chats/models/chat.entity";
-import { MessageEntity } from "./chats/models/message.entity";
+import { AuthService } from "./auth/services/auth.service";
+import { JwtService } from "@nestjs/jwt";
+import { AuthModule } from "./auth/auth.module";
+import { ChatsModule } from "./chats/chats.module";
 
 @Module({
   imports: [
@@ -20,24 +20,21 @@ import { MessageEntity } from "./chats/models/message.entity";
       url: process.env.DATABASE1_URL,
       autoLoadEntities: true,
       synchronize: true,
-      entities: [UserEntity, ChatEntity, MessageEntity],
+      entities: [UserEntity],
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.DATABASE2_URL,
       autoLoadEntities: true,
       synchronize: true,
-      entities: [UserEntity, ChatEntity, MessageEntity],
+      entities: [UserEntity],
     }),
     userModule,
-    chatsModule,
+    ChatsModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService, JwtService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({ path: "users", method: RequestMethod.ALL });
-    consumer.apply(LoggerMiddleware).forRoutes({ path: "chats", method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}
+// export class AppModule {}

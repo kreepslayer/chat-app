@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthService } from "./services/auth.service";
 import { userModule } from "src/users/users.module";
+import { JwtStrategy } from "./strategies/jwt.strategy";
+import { JwtAuthGuard } from "./guards/jwt.guard";
 
 @Module({
   imports: [
@@ -15,8 +17,9 @@ import { userModule } from "src/users/users.module";
         signOptions: { expiresIn: "100000s" },
       }),
     }),
+    ConfigModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
   exports: [AuthService],
 })
 export class AuthModule {}

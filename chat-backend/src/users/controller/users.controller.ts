@@ -1,39 +1,37 @@
 import { Body, Controller, Delete, Get, Post, UsePipes, ValidationPipe, Param, HttpException, Patch, Put, UseGuards } from "@nestjs/common";
 import { UsersService } from "../service/users.service";
-import { User, UserRole } from "../models/user.interfase";
+import { User, LoginResponse } from "../models/user.interfase";
 import { map, Observable, catchError, throwError, of } from "rxjs";
-import { hasRoles } from "src/auth/decorator/roles.decorator";
-import { JwtAuthGuard } from "src/auth/guards/jwt-guard";
-import { RolesGuard } from "src/auth/guards/roles.guard";
 import { log } from "console";
 // import { User } from 'src/schemas/User.schema';
+import { DtoHelperService } from "../dto/dto-helper.service";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { LoginUserDto } from "../dto/login-user.dto";
 
 @Controller("users")
 export class UsersController {
-  constructor(private UsersService: UsersService) {}
+  constructor(
+    private UsersService: UsersService,
+    private dtoHelperService: DtoHelperService,
+  ) {}
 
   //'http://localhost:3000/users + {user}'
   @Post("register")
-  createUser(@Body() user: User): Observable<User | Object> {
-    return this.UsersService.createUser(user).pipe(
-      map((user: User) => user),
-      catchError(err => of({ error: err.message })),
-    );
+  async createUser(@Body() user: CreateUserDto): Promise<User> {
+    const userEntity = await this.dtoHelperService.createUserDroToEntity(user);
+    return this.UsersService.createUser(userEntity);
   }
 
   // 'http://localhost:3000/users/login'
   @Post("login")
-  @UsePipes(ValidationPipe)
-  login(@Body() user: User): Observable<Object> {
-    let FullUser = this.UsersService.getUserByUserName(user.userName).subscribe({ next: data => (FullUser = data) });
-    console.log("🚀 ~ UsersController ~ login ~ user.userName:", user.userName);
-    console.log("🚀 ~ UsersController ~ login ~ FullUser:", FullUser);
-    return this.UsersService.login(user).pipe(
-      map((jwt: string) => {
-        return { access_token: jwt, success: true, FullUser: FullUser };
-      }),
-      catchError(err => throwError(new HttpException(err.message, 401))),
-    );
+  async login(@Body() user: LoginUserDto): Promise<LoginResponse> {
+    const userEntity: User = await this.dtoHelperService.loginUserDtoEntity(user);
+    const jwt: string = await this.UsersService.login(userEntity);
+    return {
+      access_token: jwt,
+      token_type: "JWT",
+      expires_in: 10000,
+    };
   }
 
   // 'http://localhost:3000/users/:id'
@@ -43,8 +41,6 @@ export class UsersController {
   // }
 
   // 'http://localhost:3000/users'
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   getAllUsers(): Observable<User[]> {
     return this.UsersService.findAll();

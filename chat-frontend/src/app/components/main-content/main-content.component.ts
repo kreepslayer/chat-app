@@ -98,9 +98,7 @@ export class MainContentComponent {
         sender: {
           id: 0,
           userName: 'TestUser',
-          displayName: 'TestUser',
-          avatarURL: 'TestUser',
-          role: 'TestUser',
+          password: 'TestUserPassword',
         },
       },
     ],

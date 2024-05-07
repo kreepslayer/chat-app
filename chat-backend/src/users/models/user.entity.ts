@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { UserRole } from "./user.interfase";
 
 @Entity()
 export class UserEntity {
@@ -11,13 +10,4 @@ export class UserEntity {
 
   @Column()
   password: string;
-
-  @Column()
-  avatarURL: string;
-
-  @Column()
-  displayName: string;
-
-  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
-  role: UserRole;
 }

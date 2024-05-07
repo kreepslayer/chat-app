@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { User, UserRole } from "../models/user.interfase";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { User } from "../models/user.interfase";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../models/user.entity";
 import { Repository } from "typeorm";
@@ -15,28 +15,34 @@ export class UsersService {
     private AuthService: AuthService,
   ) {}
 
-  createUser(user: User): Observable<User> {
-    // return from(this.userRepository.save(user)); non hashed
+  async createUser(user: User): Promise<User> {
+    const userNameExists = await this.userNameExists(user.userName);
+    if (userNameExists === false) {
+      const passwordHash = await this.AuthService.hashPassword(user.password);
+      user.password = passwordHash;
 
-    return this.AuthService.hashPassword(user.password).pipe(
-      switchMap((passwordHash: string) => {
-        const newUser = new UserEntity();
-        newUser.userName = user.userName;
-        newUser.password = passwordHash;
-        newUser.displayName = user.displayName;
-        newUser.avatarURL = user.avatarURL;
-        newUser.role = user.role;
-
-        return from(this.userRepository.save(newUser)).pipe(
-          map((user: User) => {
-            const { password, ...result } = user;
-            return result;
-          }),
-          catchError(err => throwError(err)),
-        );
-      }),
-    );
+      const newUser = await this.userRepository.save(this.userRepository.create(user));
+      return this.findOne(newUser.id);
+    } else {
+      throw new HttpException("Username already exists", HttpStatus.CONFLICT);
+    }
   }
+
+  async login(user: User): Promise<string> {
+    const foundUser = await this.findByUserName(user.userName);
+    if (foundUser) {
+      const passwordMatched = await this.AuthService.comparePasswords(user.password, foundUser.password);
+      if (passwordMatched) {
+        const payload: User = await this.findOne(foundUser.id);
+        return this.AuthService.generateJWT(payload);
+      } else {
+        throw new HttpException("Login success but wrong credentials", HttpStatus.UNAUTHORIZED);
+      }
+    } else {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+  }
+
   deleteUser(id: number): Observable<any> {
     return from(this.userRepository.delete(id));
   }
@@ -64,30 +70,22 @@ export class UsersService {
     );
   }
 
-  login(user: User): Observable<string> {
-    return this.validateUser(user.userName, user.password).pipe(
-      switchMap((user: User) => {
-        if (user) return this.AuthService.generateJWT(user).pipe(map((jwt: string) => jwt));
-        else return "Wrong credentials";
-      }),
-    );
-  }
-  validateUser(userName: string, password: string): Observable<User> {
-    return this.getUserByUserName(userName).pipe(
-      switchMap(user =>
-        this.AuthService.comparePasswords(password, user.password).pipe(
-          map((match: boolean) => {
-            if (match) {
-              const { password, ...result } = user;
-              return result;
-            } else {
-              throw Error;
-            }
-          }),
-        ),
-      ),
-    );
-  }
+  // validateUser(userName: string, password: string): Observable<User> {
+  //   return this.getUserByUserName(userName).pipe(
+  //     switchMap(user =>
+  //       this.AuthService.comparePasswords(password, user.password).pipe(
+  //         map((match: boolean) => {
+  //           if (match) {
+  //             const { password, ...result } = user;
+  //             return result;
+  //           } else {
+  //             throw Error;
+  //           }
+  //         }),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   getUserByUserName(userName: string): Observable<User> {
     return from(this.userRepository.findOne({ where: { userName } }));
@@ -97,7 +95,26 @@ export class UsersService {
     return from(this.userRepository.update(id, user));
   }
 
-  ifAdmin(username: string): Observable<User> {
-    return from(this.userRepository.findOne({ where: { userName: username, role: UserRole.ADMIN } }));
+  private async findOne(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
+  private async userNameExists(userName: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { userName } });
+    return !!user;
+  }
+  private async findByUserName(userName: string): Promise<User> {
+    return this.userRepository.findOne({ where: { userName }, select: ["id", "userName", "password"] });
+  }
+
+  async getOneById(id: number): Promise<User> {
+    return this.userRepository.findOneByOrFail({
+      id: id,
+    });
+  }
+  async getOneByName(username: string): Promise<User> {
+    return this.userRepository.findOneByOrFail({
+      userName: username,
+    });
   }
 }

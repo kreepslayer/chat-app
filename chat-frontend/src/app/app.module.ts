@@ -12,6 +12,16 @@ import { MainContentComponent } from './components/main-content/main-content.com
 import { MessageComponent } from './components/message/message.component';
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export const LOCAL_STORAGE_TOKEN = 'token';
+
+export function tokenGetter() {
+  return localStorage.getItem(LOCAL_STORAGE_TOKEN);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,8 +40,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     NgxPageScrollCoreModule,
     BrowserAnimationsModule,
+
+    // angular material
+    MatSnackBarModule,
+
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost:3000'],
+      },
+    }),
   ],
-  providers: [],
+  providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

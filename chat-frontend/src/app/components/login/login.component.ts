@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { CurrentUserService } from '../../services/currentUser.service';
 
 @Component({
@@ -24,9 +24,7 @@ export class LoginComponent implements OnInit {
   currentUser = {
     id: 0,
     userName: '',
-    displayName: '',
-    avatarURL: '',
-    role: '',
+    password: '',
   };
   ngOnInit(): void {
     this.currentUser = this.currentUserService.getCurrentUser();
@@ -36,10 +34,12 @@ export class LoginComponent implements OnInit {
     console.log(this.loginForm.value);
     this.authService
       .login(this.loginForm.value)
-      .pipe()
-      .subscribe((data) => {
-        console.log('no errors');
-        this.router.navigate(['/main']);
-      });
+      .pipe(
+        tap(() => {
+          console.log('no errors');
+          this.router.navigate(['/main']);
+        })
+      )
+      .subscribe((data) => {});
   }
 }

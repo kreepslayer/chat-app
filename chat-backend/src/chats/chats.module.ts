@@ -1,14 +1,10 @@
 import { Module } from "@nestjs/common";
-import { ChatsService } from "./service/chats.service";
-import { ChatsController } from "./controller/chats.controller";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ChatEntity } from "./models/chat.entity";
 import { AuthModule } from "src/auth/auth.module";
+import { userModule } from "src/users/users.module";
+import { ChatsGetaway } from "./getaway/chatsGetaway";
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([ChatEntity])],
-  providers: [ChatsService],
-  controllers: [ChatsController],
-  exports: [ChatsService],
+  imports: [userModule, AuthModule],
+  providers: [ChatsGetaway],
 })
-export class chatsModule {}
+export class ChatsModule {}
