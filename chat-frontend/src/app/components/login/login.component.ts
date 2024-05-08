@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+// import { CurrentUserService } from '../../services/currentUser.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { map, tap } from 'rxjs';
-import { CurrentUserService } from '../../services/currentUser.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,16 +18,16 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    public currentUserService: CurrentUserService
-  ) {}
+    private router: Router
+  ) // public currentUserService: CurrentUserService
+  {}
   currentUser = {
     id: 0,
     userName: '',
     password: '',
   };
   ngOnInit(): void {
-    this.currentUser = this.currentUserService.getCurrentUser();
+    // this.currentUser = this.currentUserService.getCurrentUser();
   }
 
   onSubmit() {

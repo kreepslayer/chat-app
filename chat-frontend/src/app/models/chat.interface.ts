@@ -1,8 +1,8 @@
 import { User } from './user.interface';
 import { Message } from './message.interface';
 
-export interface Chat {
-  User1Name: string;
-  User2Name: string;
-  Messages: Message[];
+export class Chat {
+  id?: number;
+  name?: string;
+  users?: User[];
 }

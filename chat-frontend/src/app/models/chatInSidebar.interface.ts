@@ -1,5 +1,7 @@
+import type { User } from './user.interface';
+
 export interface chatInSidebar {
-  username: string;
+  userName: string;
   lastMessageText: string;
   notifications: number;
 }

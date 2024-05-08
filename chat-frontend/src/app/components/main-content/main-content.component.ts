@@ -1,11 +1,18 @@
 import { ActiveChat } from '../../models/activeChat.interface';
 import { animate, style, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { CurrentUserService } from '../../services/currentUser.service';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  type OnInit,
+} from '@angular/core';
+// import { CurrentUserService } from '../../services/currentUser.service';
 import { Router } from '@angular/router';
 import { transition } from '@angular/animations';
 import { Message } from '../../models/message.interface';
 import { Chat } from '../../models/chat.interface';
+import { ChatService } from '../../services/chat.service';
 @Component({
   selector: 'app-main-content',
   templateUrl: './main-content.component.html',
@@ -29,14 +36,14 @@ import { Chat } from '../../models/chat.interface';
     ]),
   ],
 })
-export class MainContentComponent {
-  @Input() chats: Chat[] = [];
+export class MainContentComponent implements OnInit {
+  chats$ = this.chatService.getChats();
   sendMessage() {
-    console.log(this.CurrentUserService.getCurrentUser());
+    // console.log(this.CurrentUserService.getCurrentUser());
     let messageSending: Message = {
       text: this.messageToSend,
       time: new Date().getHours() + ':' + new Date().getMinutes(),
-      sender: this.CurrentUserService.getCurrentUser(),
+      sender: 'TestUser',
     };
 
     this.activeChat.messages.push(messageSending);
@@ -74,7 +81,8 @@ export class MainContentComponent {
 
   constructor(
     private router: Router,
-    private CurrentUserService: CurrentUserService
+    // private CurrentUserService: CurrentUserService
+    private chatService: ChatService
   ) {}
   messageToSend: string = ``;
   ngOnInit() {
@@ -87,7 +95,8 @@ export class MainContentComponent {
         });
       }
     }, 1000);
-    console.log(`chats: ${this.chats}`);
+    this.chatService.createChat();
+    console.log(`chats: ${this.chats$}`);
   }
   activeChat: ActiveChat = {
     username: 'TestUser',
@@ -95,11 +104,7 @@ export class MainContentComponent {
       {
         text: 'Test message',
         time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: {
-          id: 0,
-          userName: 'TestUser',
-          password: 'TestUserPassword',
-        },
+        sender: 'TestUser',
       },
     ],
   };

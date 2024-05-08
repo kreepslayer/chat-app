@@ -24,13 +24,13 @@
         <li>
           <app-chat
             *ngFor="let chat of chatsInSidebar"
-            [username]="chat.username"
+            [username]="chat.userName"
             [lastMessage]="chat.lastMessageText"
             [notifications]="chat.notifications"
           ></app-chat>
         </li>
       </ul>
     </div>
-    <app-main-content [chats]="chats"></app-main-content>
+    <app-main-content></app-main-content>
   </div>
 </div>

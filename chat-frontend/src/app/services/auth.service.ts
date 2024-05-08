@@ -1,3 +1,12 @@
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { Chat } from '../models/chat.interface';
+// import { CurrentUserService } from './currentUser.service';
+import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { LoginResponse } from '../models/loginResponse.interface';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { Observable, throwError } from 'rxjs';
+import { User } from '../models/user.interface';
 import {
   HttpClient,
   HttpEvent,
@@ -5,16 +14,6 @@ import {
   HttpHandler,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
-import { CurrentUserService } from './currentUser.service';
-import { Chat } from '../models/chat.interface';
-import { User } from '../models/user.interface';
-import { Observable, throwError } from 'rxjs';
-import { LoginResponse } from '../models/loginResponse.interface';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { LOCAL_STORAGE_TOKEN } from '../app.module';
-import { JwtHelperService } from '@auth0/angular-jwt';
 export interface loginForm {
   userName: string;
   password: string;
@@ -30,7 +29,7 @@ export const snackBarConfig: MatSnackBarConfig = {
 export class AuthService {
   constructor(
     private http: HttpClient,
-    private currentUserService: CurrentUserService,
+    // private currentUserService: CurrentUserService,
     private snackbar: MatSnackBar,
     private jwtService: JwtHelperService
   ) {}
@@ -55,7 +54,7 @@ export class AuthService {
       })
       .pipe(
         tap((res: LoginResponse) => {
-          localStorage.setItem(LOCAL_STORAGE_TOKEN, res.access_token);
+          localStorage.setItem('token', res.access_token);
         }),
         tap(() => {
           this.snackbar.open('Login successful', 'Close', snackBarConfig);

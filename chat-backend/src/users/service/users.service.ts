@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { User } from "../models/user.interfase";
+import { User } from "../models/user.interface";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "../models/user.entity";
+import { UserEntity } from "../models/enteties/user.entity";
 import { Repository } from "typeorm";
 import { catchError, from, map, Observable, switchMap, throwError } from "rxjs";
 import { AuthService } from "../../auth/services/auth.service";
@@ -43,31 +43,19 @@ export class UsersService {
     }
   }
 
-  deleteUser(id: number): Observable<any> {
+  async deleteUser(id: number): Promise<any> {
     return from(this.userRepository.delete(id));
   }
-  updateUser(id: number, user: User): Observable<any> {
+  async updateUser(id: number, user: User): Promise<any> {
     delete user.password;
     return from(this.userRepository.update(id, user));
   }
-  findAll(): Observable<User[]> {
-    return from(this.userRepository.find()).pipe(
-      map((users: User[]) => {
-        users.forEach(function (user) {
-          delete user.password;
-        });
-        return users;
-      }),
-    );
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
-  getUserById(id: number): Observable<User> {
+  async getUserById(id: number): Promise<User> {
     log(`id: ${id}`);
-    return from(this.userRepository.findOne({ where: { id } })).pipe(
-      map((user: User) => {
-        const { password, ...result } = user;
-        return result;
-      }),
-    );
+    return this.userRepository.findOne({ where: { id } });
   }
 
   // validateUser(userName: string, password: string): Observable<User> {
@@ -87,11 +75,11 @@ export class UsersService {
   //   );
   // }
 
-  getUserByUserName(userName: string): Observable<User> {
-    return from(this.userRepository.findOne({ where: { userName } }));
+  async getUserByUserName(userName: string): Promise<User> {
+    return this.userRepository.findOne({ where: { userName } });
   }
 
-  updateUserRole(id: number, user: User): Observable<any> {
+  async updateUserRole(id: number, user: User): Promise<any> {
     return from(this.userRepository.update(id, user));
   }
 
