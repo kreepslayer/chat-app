@@ -15,12 +15,12 @@ export class ChatService {
   }
 
   getChats() {
-    return this.socket.fromEvent('chats');
+    return this.socket.fromEvent<Chat[]>('chats');
   }
 
   createChat() {
     const user2: User = {
-      id: 2,
+      id: 4,
     };
 
     const chat: Chat = {

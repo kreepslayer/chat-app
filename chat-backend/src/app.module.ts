@@ -23,13 +23,6 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
       synchronize: true,
       entities: [UserEntity],
     }),
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      url: process.env.DATABASE2_URL,
-      autoLoadEntities: true,
-      synchronize: true,
-      entities: [UserEntity],
-    }),
     UsersModule,
     ChatsModule,
     AuthModule,

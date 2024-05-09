@@ -1,9 +1,6 @@
 import { AuthService } from '../../services/auth.service';
 import { Chat } from '../../models/chat.interface';
 import { chatInSidebar } from '../../models/chatInSidebar.interface';
-// import { ChatsService } from '../../services/chats.service';
-// import { CurrentUserService } from '../../services/currentUser.service';
-// import { DbService } from '../../services/db.service';
 import { map } from 'rxjs/operators';
 import { Message } from '../../models/message.interface';
 import { Observable } from 'rxjs';
@@ -18,7 +15,7 @@ import { ChatService } from '../../services/chat.service';
   styleUrl: './main.component.scss',
 })
 export class MainComponent {
-  constructor() {}
+  constructor(private chatService: ChatService) {}
   //animations
   isExpanded: boolean = false;
   state: string = 'initial';
@@ -55,4 +52,12 @@ export class MainComponent {
       notifications: 0,
     },
   ];
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.chatService.createChat();
+  }
+
+  chats = this.chatService.getChats();
 }

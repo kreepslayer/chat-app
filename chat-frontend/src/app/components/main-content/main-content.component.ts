@@ -37,7 +37,7 @@ import { ChatService } from '../../services/chat.service';
   ],
 })
 export class MainContentComponent implements OnInit {
-  chats$ = this.chatService.getChats();
+  chats$ = [];
   sendMessage() {
     // console.log(this.CurrentUserService.getCurrentUser());
     let messageSending: Message = {
@@ -95,8 +95,6 @@ export class MainContentComponent implements OnInit {
         });
       }
     }, 1000);
-    this.chatService.createChat();
-    console.log(`chats: ${this.chats$}`);
   }
   activeChat: ActiveChat = {
     username: 'TestUser',

@@ -13,7 +13,10 @@ export class ChatsService {
   ) {}
 
   async createChat(chat: Chat, creator: User): Promise<Chat> {
+    console.log("🚀 ~ ChatsService ~ createChat ~ creator:", creator);
+    console.log("🚀 ~ ChatsService ~ createChat ~ chat:", chat);
     const newChat = await this.addCreator(chat, creator);
+    console.log("🚀 ~ ChatsService ~ createChat ~ newChat:", newChat);
     return this.chatRepository.save(newChat);
   }
 

@@ -23,7 +23,6 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log("payload:", payload);
   }
   async handleConnection(socket: Socket) {
-    console.log(`socket.handshake.headers.authorization:`, socket.handshake.headers.authorization);
     try {
       // если токен не верен - отклоняем соединение
       const decodedToken = await this.authService.verifyJWT(socket.handshake.headers.authorization);
@@ -34,8 +33,9 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
         this.disconnect(socket);
       } else {
         socket.data.user = user;
+        console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ socket.data.user.id:", socket.data.user.id);
         const chats = await this.chatsService.getChatsForUser(user.id);
-
+        console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ chats:", chats);
         //отправляем юзеру его чаты
         return this.server.to(socket.id).emit("chats", chats);
       }
@@ -58,6 +58,8 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage("createChat")
   async onCreateChat(socket: Socket, chat: Chat): Promise<Chat> {
+    console.log("🚀 ~ ChatsGetaway ~ onCreateChat ~ chat:", chat);
+    console.log("🚀 ~ ChatsGetaway ~ onCreateChat ~ socket.data:", socket.data);
     return await this.chatsService.createChat(chat, socket.data.user);
   }
 }

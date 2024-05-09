@@ -1,5 +1,5 @@
 import { UserEntity } from "src/users/models/enteties/user.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class ChatEntity {
@@ -10,5 +10,6 @@ export class ChatEntity {
   name: string;
 
   @ManyToMany(() => UserEntity)
+  @JoinTable()
   users: UserEntity[];
 }
