@@ -12,6 +12,5 @@ Stack:
 [<img src = "./MDicons/nestjs-icon.svg" height = "50px" color = "red"/>](https://nestjs.com/)
 [<img src = "./MDicons/postgresql-logo-svgrepo-com.svg" height = "50px"/>](https://www.postgresql.org/)
 [<img src = "./MDicons/node-js.svg" height = "50px"/>](https://nodejs.org/en)
-[<img src = "./MDicons/draw-io-seeklogo.svg" height = "50px"/>](https://draw.io/)
 
 ## How to run it ?

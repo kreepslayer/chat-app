@@ -18,7 +18,7 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
-      url: process.env.DATABASE1_URL,
+      url: process.env.DATABASE_URL,
       autoLoadEntities: true,
       synchronize: true,
       entities: [UserEntity],

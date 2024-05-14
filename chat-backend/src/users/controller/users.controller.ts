@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Param, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Param, Put, Query } from "@nestjs/common";
 import { UsersService } from "../service/users.service";
 import { User, LoginResponse } from "../models/user.interface";
 import { Observable } from "rxjs";
@@ -57,12 +57,13 @@ export class UsersController {
   async updateUserRole(@Param("id") id: string, @Body() user: User): Promise<any> {
     return this.UsersService.updateUserRole(+id, user);
   }
+
   //TODO
   // @Patch(':id')
 
   //get user by username
-  @Get(":userName")
-  async getUserByUserName(@Param("userName") userName: string): Promise<User> {
+  @Get("/find-by-username")
+  async getUserByUserName(@Query("username") userName: string): Promise<User> {
     return this.UsersService.getUserByUserName(userName);
   }
 }

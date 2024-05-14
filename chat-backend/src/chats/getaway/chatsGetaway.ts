@@ -5,6 +5,7 @@ import { AuthService } from "src/auth/services/auth.service";
 import { UsersService } from "src/users/service/users.service";
 import { ChatsService } from "../services/chats.service";
 import { Chat } from "../models/chat.interface";
+import type { User } from "src/users/models/user.interface";
 @WebSocketGateway({
   cors: {
     origin: ["*", "http://localhost:4200", "http://localhost:3000"],
@@ -61,5 +62,11 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log("🚀 ~ ChatsGetaway ~ onCreateChat ~ chat:", chat);
     console.log("🚀 ~ ChatsGetaway ~ onCreateChat ~ socket.data:", socket.data);
     return await this.chatsService.createChat(chat, socket.data.user);
+  }
+
+  @SubscribeMessage("getChatsByTwoUsers")
+  async getChatsByTwoUsers(socket: Socket, data): Promise<Chat> {
+    const { user1Name, user2Name } = data;
+    return await this.chatsService.getChatsByTwoUsers(user1Name, user2Name);
   }
 }
