@@ -81,7 +81,36 @@ export class MainComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    const modal: HTMLInputElement | null =
+      document.querySelector('.body-new-chat');
+    window.onclick = function (event) {
+      console.log(event.target);
+      if (event.target == modal) {
+        if (modal) {
+          const newChatForm: HTMLInputElement | null =
+            document.querySelector('.new-chat-form');
+          if (newChatForm) {
+            newChatForm.style.display = 'none';
+          }
+        }
+      }
+    };
   }
 
   chats$: Observable<Chat[]> = this.chatService.getChats();
+
+  showNewChatForm() {
+    let newChatForm: HTMLInputElement | null =
+      document.querySelector('.new-chat-form');
+    if (newChatForm) {
+      newChatForm.style.display = 'block';
+    }
+  }
+  closeNewChatForm() {
+    let newChatForm: HTMLInputElement | null =
+      document.querySelector('.new-chat-form');
+    if (newChatForm) {
+      newChatForm.style.display = 'none';
+    }
+  }
 }

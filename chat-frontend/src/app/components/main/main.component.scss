@@ -174,3 +174,42 @@
   backdrop-filter: blur(20px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
+#newChatBtn {
+  width: 200px;
+  height: 45px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  border-radius: 10px;
+}
+
+.new-chat-form {
+  transition: 0.4s;
+  position: fixed;
+  display: none;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: rgba($color: #000, $alpha: 0.2);
+}
+
+.close {
+  color: #fff;
+  font-size: 50px;
+  position: absolute;
+}
+.close:hover {
+  cursor: pointer;
+}
+.newChat {
+  display: flex;
+  align-items: center;
+}

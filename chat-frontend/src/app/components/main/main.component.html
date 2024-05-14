@@ -4,15 +4,10 @@
       <i class="bx bx-user active"></i>
       <i class="bx bx-group"></i>
     </div>
-    <div class="search">
-      <input
-        type="text"
-        placeholder="Search"
-        id="search"
-        (focus)="focus()"
-        (focusout)="focusout()"
-      />
-      <i class="bx bx-search-alt-2" id="searchIcon" (click)="findUser()"></i>
+    <div class="newChat">
+      <button id="newChatBtn" (click)="showNewChatForm()">
+        <span>New Chat</span>
+      </button>
     </div>
     <div class="settings-icon">
       <i class="bx bx-cog"></i>
@@ -30,6 +25,10 @@
           ></app-chat>
         </li>
       </ul>
+    </div>
+    <div class="new-chat-form">
+      <i class="bx bx-x close" (click)="closeNewChatForm()"></i>
+      <app-new-chat-form></app-new-chat-form>
     </div>
     <app-main-content></app-main-content>
   </div>

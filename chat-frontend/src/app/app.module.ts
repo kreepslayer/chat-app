@@ -15,6 +15,7 @@ import { NgModule } from '@angular/core';
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { RegisterComponent } from './components/register/register.component';
+import { NewChatFormComponent } from './components/new-chat-form/new-chat-form.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -29,6 +30,7 @@ export function tokenGetter() {
     ChatComponent,
     MainContentComponent,
     MessageComponent,
+    NewChatFormComponent,
   ],
   imports: [
     BrowserModule,
