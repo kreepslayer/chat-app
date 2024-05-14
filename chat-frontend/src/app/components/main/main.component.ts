@@ -37,16 +37,25 @@ export class MainComponent {
     }
   }
   findUser() {
+    let usersOfFind: User[] = [];
     console.log('findUser');
     let searchInput: HTMLInputElement | null =
       document.querySelector('#search');
     let searchIcon: HTMLInputElement | null =
       document.querySelector('#searchIcon');
-    searchIcon?.addEventListener('click', (e) => {
-      const text = searchInput?.value;
-      console.log(text);
-      this.chatService.getChatsByTwoUsers(text ? text : 'none', 'admin');
-    });
+    const text = searchInput?.value;
+    console.log(`text = ${text}`);
+    console.log('res -->');
+    console.log(this.userService.findByUserName(text ? text : 'none'));
+    this.userService.findByUserName(text ? text : 'none').pipe(
+      map((data) => {
+        usersOfFind = data;
+      })
+    );
+    console.log(
+      '🚀 ~ MainComponent ~ searchIcon?.addEventListener ~ chatsOfFind:',
+      usersOfFind
+    );
   }
   focusout() {
     let searchInput: HTMLInputElement | null =
@@ -72,22 +81,6 @@ export class MainComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.chatService.createChat({
-      id: 322,
-      name: 'TestChat',
-      users: [
-        {
-          id: 15,
-          password: 'test1',
-          userName: 'test1',
-        },
-        {
-          id: 16,
-          password: 'test2',
-          userName: 'test2',
-        },
-      ],
-    });
   }
 
   chats$: Observable<Chat[]> = this.chatService.getChats();

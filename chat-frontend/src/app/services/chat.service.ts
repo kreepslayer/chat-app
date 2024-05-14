@@ -33,8 +33,4 @@ export class ChatService {
       verticalPosition: 'top',
     });
   }
-
-  getChatsByTwoUsers(user1Name: string, user2Name: string) {
-    this.socket.emit('getChatsByTwoUsers', { user1Name, user2Name });
-  }
 }

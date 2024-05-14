@@ -12,7 +12,7 @@ export class UserService {
 
   findByUserName(username: string): Observable<User[]> {
     return this.http.get<User[]>(
-      `/api/users/find-by-username?username=${username}`
+      `api/users/find-by-username?username=${username}`
     );
   }
 }

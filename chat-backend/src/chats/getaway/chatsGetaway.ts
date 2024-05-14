@@ -65,8 +65,8 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage("getChatsByTwoUsers")
-  async getChatsByTwoUsers(socket: Socket, data): Promise<Chat> {
-    const { user1Name, user2Name } = data;
-    return await this.chatsService.getChatsByTwoUsers(user1Name, user2Name);
+  handleEvent(socket: Socket, userNameToFind: string): Promise<Chat> {
+    console.log("🚀 ~ ChatsGetaway ~ getChatsByTwoUsers ~ socket:", socket);
+    return this.chatsService.getChatsByTwoUsers(userNameToFind, socket.data.user.userName);
   }
 }

@@ -64,6 +64,9 @@ export class UsersController {
   //get user by username
   @Get("/find-by-username")
   async getUserByUserName(@Query("username") userName: string): Promise<User> {
+    console.log(`username = ${userName}`);
+    console.log(`res -->`);
+    console.log(this.UsersService.getUserByUserName(userName));
     return this.UsersService.getUserByUserName(userName);
   }
 }
