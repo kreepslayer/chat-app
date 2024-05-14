@@ -10,6 +10,7 @@ import type { User } from "src/users/models/user.interface";
   cors: {
     origin: ["*", "http://localhost:4200", "http://localhost:3000"],
   },
+  // namespace: "/chats",
 })
 export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -35,7 +36,7 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
       } else {
         socket.data.user = user;
         console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ socket.data.user.id:", socket.data.user.id);
-        const chats = await this.chatsService.getChatsForUser(user.id);
+        const chats: Chat[] = await this.chatsService.getChatsForUser(user.id);
         console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ chats:", chats);
         //отправляем юзеру его чаты
         return this.server.to(socket.id).emit("chats", chats);
@@ -64,9 +65,8 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
     return await this.chatsService.createChat(chat, socket.data.user);
   }
 
-  @SubscribeMessage("getChatsByTwoUsers")
-  handleEvent(socket: Socket, userNameToFind: string): Promise<Chat> {
-    console.log("🚀 ~ ChatsGetaway ~ getChatsByTwoUsers ~ socket:", socket);
-    return this.chatsService.getChatsByTwoUsers(userNameToFind, socket.data.user.userName);
+  @SubscribeMessage("dropTable")
+  async DropTable(socket: Socket) {
+    return await this.chatsService.dropTable();
   }
 }

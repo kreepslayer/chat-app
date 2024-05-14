@@ -55,6 +55,7 @@ export class AuthService {
       .pipe(
         tap((res: LoginResponse) => {
           localStorage.setItem('token', res.access_token);
+          localStorage.setItem('userName', loginForm.userName);
         }),
         tap(() => {
           this.snackbar.open('Login successful', 'Close', snackBarConfig);

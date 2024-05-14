@@ -8,6 +8,6 @@ import { Component, Input } from '@angular/core';
 export class ChatComponent {
   constructor() {}
   @Input() username: string = '';
-  @Input() lastMessage: string = '';
-  @Input() notifications: number = 0;
+  @Input() lastMessage: string | undefined = '';
+  @Input() notifications: number | undefined = 0;
 }

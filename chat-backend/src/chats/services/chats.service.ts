@@ -19,17 +19,33 @@ export class ChatsService {
     console.log("🚀 ~ ChatsService ~ createChat ~ creator:", creator);
     console.log("🚀 ~ ChatsService ~ createChat ~ chat:", chat);
     const newChat = await this.addCreator(chat, creator);
+    const user = await this.userService.getUserByUserName(chat.users[0].userName);
+    newChat.users.push(user);
+    newChat.users.splice(0, 1);
+    console.log("🚀 ~ ChatsService ~ createChat ~ newChat.users:", newChat.users);
     console.log("🚀 ~ ChatsService ~ createChat ~ newChat:", newChat);
+
+    //TODO
+    //check if chat already exists
+
     return this.chatRepository.save(newChat);
   }
 
   async addCreator(chat: Chat, creator: User): Promise<Chat> {
+    console.log("🚀 ~ ChatsService ~ addCreator ~ chat:", chat);
     chat.users.push(creator);
     return chat;
   }
 
+  async addUserToChat(chat: Chat, user: User): Promise<Chat> {
+    console.log("🚀 ~ ChatsService ~ addUserToChat ~ chat:", chat);
+    console.log("🚀 ~ ChatsService ~ addUserToChat ~ user:", user);
+    chat.users.push(user);
+    return chat;
+  }
+
   async getChatsForUser(userId: number): Promise<Chat[]> {
-    const query = this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "user").where("user.id = :id", { id: userId });
+    const query = this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").select(["chat", "user.userName"]);
     return await query.getMany();
   }
 
@@ -68,5 +84,10 @@ export class ChatsService {
       ],
       relations: ["users"],
     });
+  }
+
+  async dropTable() {
+    const query = this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").delete();
+    return await query.execute();
   }
 }

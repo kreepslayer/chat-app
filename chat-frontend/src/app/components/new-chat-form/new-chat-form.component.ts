@@ -12,22 +12,7 @@ import type { Chat } from '../../models/chat.interface';
   styleUrl: './new-chat-form.component.scss',
 })
 export class NewChatFormComponent implements OnInit {
-  newChatForm: FormGroup = new FormGroup({
-    userName: new FormControl('', [Validators.required]),
-    chatName: new FormControl('none'),
-  });
   constructor(private chatService: ChatService, private router: Router) {}
 
   ngOnInit(): void {}
-
-  onSubmit() {
-    const chat: Chat = {};
-    chat.users = [
-      {
-        userName: this.newChatForm.value.userName,
-      },
-    ];
-    chat.name = this.newChatForm.value.chatName;
-    this.chatService.createChat(chat);
-  }
 }

@@ -5,7 +5,7 @@
     <div class="message">{{ lastMessage }}</div>
   </div>
   <div class="notifications">
-    <span *ngIf="notifications > 99">99+</span>
-    <span *ngIf="notifications < 99">{{ notifications }}</span>
+    <span *ngIf="notifications && notifications > 99">99+</span>
+    <span *ngIf="notifications && notifications < 99">{{ notifications }}</span>
   </div>
 </div>
