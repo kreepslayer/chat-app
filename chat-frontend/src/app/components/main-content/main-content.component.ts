@@ -44,7 +44,9 @@ export class MainContentComponent implements OnInit {
     let messageSending: Message = {
       text: this.messageToSend,
       time: new Date().getHours() + ':' + new Date().getMinutes(),
-      sender: 'TestUser',
+      sender: {
+        userName: 'Kreepslayer',
+      },
     };
 
     this.activeChat.messages.push(messageSending);
@@ -103,7 +105,9 @@ export class MainContentComponent implements OnInit {
       {
         text: 'Test message',
         time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sender: 'TestUser',
+        sender: {
+          userName: 'Kreepslayer',
+        },
       },
     ],
   };

@@ -1,7 +1,8 @@
 import { UserEntity } from "src/users/models/enteties/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { MessageEntity } from "src/chats/models/message.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity("chat")
 export class ChatEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,4 +13,10 @@ export class ChatEntity {
   @ManyToMany(() => UserEntity)
   @JoinTable()
   users: UserEntity[];
+
+  @OneToMany(() => MessageEntity, message => message.chat)
+  messages: MessageEntity[];
+
+  @UpdateDateColumn()
+  lastUpdate: Date;
 }
