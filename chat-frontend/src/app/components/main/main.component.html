@@ -23,6 +23,13 @@
             [lastMessage]="chat.lastMessageText"
             [notifications]="chat.notifications"
           ></app-chat>
+          <ul>
+            <li *ngFor="let chat of chats$ | async">
+              id:{{ chat.id }} | name:{{ chat.name }} | users:{{
+                chat.users | json
+              }}
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
@@ -59,13 +66,7 @@
         </div>
       </div>
     </div>
-    <!-- <app-main-content></app-main-content> -->
-    <ul>
-      <li *ngFor="let chat of chats$ | async">
-        id:{{ chat.id }} | name:{{ chat.name }} | users:{{ chat.users | json }}
-      </li>
-    </ul>
-
+    <app-main-content></app-main-content>
     <div class="btn" (click)="test()">TEST</div>
   </div>
 </div>

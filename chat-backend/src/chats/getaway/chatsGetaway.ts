@@ -5,7 +5,8 @@ import { AuthService } from "src/auth/services/auth.service";
 import { UsersService } from "src/users/service/users.service";
 import { ChatsService } from "../services/chats.service";
 import { Chat } from "../models/chat.interface";
-import type { User } from "src/users/models/user.interface";
+import { User } from "src/users/models/user.interface";
+import { log } from "console";
 @WebSocketGateway({
   cors: {
     origin: ["*", "http://localhost:4200", "http://localhost:3000"],
@@ -37,8 +38,12 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
         socket.data.user = user;
         console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ socket.data.user.id:", socket.data.user.id);
         const chats: Chat[] = await this.chatsService.getChatsForUser(user.id);
-        console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ chats:", chats);
         //отправляем юзеру его чаты
+        log("emit chats");
+        console.log("🚀 ~ ChatsGetaway ~ handleConnection ~ chats:", chats);
+        // chats.forEach((chat: Chat) => {
+        //   console.log(`🚀 ~ ChatsGetaway ~ handleConnection ~ ${chat.name} users:`, chat.users);
+        // });
         return this.server.to(socket.id).emit("chats", chats);
       }
     } catch {
@@ -68,5 +73,16 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage("dropTable")
   async DropTable(socket: Socket) {
     return await this.chatsService.dropTable();
+  }
+
+  @SubscribeMessage("chatsInSidebar")
+  async getChatsInSidebar(socket: Socket) {
+    const chatsInSidebar = await this.chatsService.getChatsInSidebar(socket.data.user);
+    return this.server.to(socket.id).emit("chatsInSidebar", chatsInSidebar);
+  }
+
+  @SubscribeMessage("sendMessage")
+  async sendMessage(socket: Socket, message: any) {
+    this.server.to(socket.id).emit("newMessage", message);
   }
 }

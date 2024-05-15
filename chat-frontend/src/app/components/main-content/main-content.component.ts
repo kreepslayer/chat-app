@@ -13,6 +13,7 @@ import { transition } from '@angular/animations';
 import { Message } from '../../models/message.interface';
 import { Chat } from '../../models/chat.interface';
 import { ChatService } from '../../services/chat.service';
+import type { Observable } from 'rxjs';
 @Component({
   selector: 'app-main-content',
   templateUrl: './main-content.component.html',
@@ -38,8 +39,8 @@ import { ChatService } from '../../services/chat.service';
 })
 export class MainContentComponent implements OnInit {
   chats$ = [];
+  // newMessage$: Observable<any>;
   sendMessage() {
-    // console.log(this.CurrentUserService.getCurrentUser());
     let messageSending: Message = {
       text: this.messageToSend,
       time: new Date().getHours() + ':' + new Date().getMinutes(),

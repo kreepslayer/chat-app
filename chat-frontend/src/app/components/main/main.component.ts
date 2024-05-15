@@ -63,6 +63,12 @@ export class MainComponent {
         }
       }
     };
+    this.chatService.getChats().subscribe((data) => {
+      console.log(data);
+    });
+    this.chatService.getChatsInSidebar().subscribe((data) => {
+      console.log(data);
+    });
   }
 
   chats$: Observable<Chat[]> = this.chatService.getChats();

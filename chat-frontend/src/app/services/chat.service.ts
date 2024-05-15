@@ -18,36 +18,12 @@ export class ChatService {
     private http: HttpClient
   ) {}
 
-  getMessages() {
-    return this.socket.fromEvent('message');
-  }
-
   getChats(): Observable<Chat[]> {
     return this.socket.fromEvent('chats');
   }
 
   getChatsInSidebar(): Observable<chatInSidebar[]> {
-    return this.socket.fromEvent('chats').pipe(
-      map((chats: any) => {
-        const sideBarChats: chatInSidebar[] = [];
-        for (let index = 0; index < chats.length; index++) {
-          let thisUsers = chats[index].users;
-          let thisUser = thisUsers[0];
-          if (thisUsers[0].userName === localStorage.getItem('userName')) {
-            if (thisUsers[1] !== undefined) {
-              thisUser.userName = thisUsers[1].userName;
-            } else {
-              thisUser.userName = 'error in chat creating';
-            }
-          }
-          sideBarChats.push({
-            userName: thisUser.userName,
-            lastMessageText: 'test message',
-          });
-        }
-        return sideBarChats;
-      })
-    );
+    return this.socket.fromEvent('chatsInSidebar');
   }
 
   createChat(chat: Chat) {
@@ -96,5 +72,13 @@ export class ChatService {
 
   dropTable() {
     this.socket.emit('dropTable');
+  }
+
+  sendMessage(message: any, socket: Socket) {
+    this.socket.emit('sendMessage', message);
+  }
+
+  getMessage(): Observable<any> {
+    return this.socket.fromEvent<any>('newMessage');
   }
 }

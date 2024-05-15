@@ -6,6 +6,8 @@ import { User } from "src/users/models/user.interface";
 import { Chat } from "../models/chat.interface";
 import { UsersService } from "src/users/service/users.service";
 import { map } from "rxjs";
+import { log } from "console";
+import { ChatInSidebar } from "../models/ChatInSidebar.interface";
 
 @Injectable()
 export class ChatsService {
@@ -20,6 +22,7 @@ export class ChatsService {
     console.log("🚀 ~ ChatsService ~ createChat ~ chat:", chat);
     const newChat = await this.addCreator(chat, creator);
     const user = await this.userService.getUserByUserName(chat.users[0].userName);
+    if (user == null) throw new Error("User not found");
     newChat.users.push(user);
     newChat.users.splice(0, 1);
     console.log("🚀 ~ ChatsService ~ createChat ~ newChat.users:", newChat.users);
@@ -44,8 +47,36 @@ export class ChatsService {
     return chat;
   }
 
+  async getAllChats(): Promise<Chat[]> {
+    log(`getAllChats`);
+    let allChats = await this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").select(["chat", "user.userName"]).getMany();
+    console.log("🚀 ~ ChatsService ~ getAllChats ~ allChats:", allChats);
+    console.log("users -->");
+    allChats = allChats.map((chat: ChatEntity) => {
+      console.log(
+        chat.users.map((user: User) => {
+          return user.userName;
+        }),
+      );
+      return chat;
+    });
+    return await this.chatRepository.find({
+      relations: ["users"],
+      order: {
+        id: "ASC",
+      },
+    });
+  }
+
   async getChatsForUser(userId: number): Promise<Chat[]> {
-    const query = this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").select(["chat", "user.userName"]);
+    const query = this.chatRepository
+      .createQueryBuilder("chat")
+      .leftJoin("chat.users", "users")
+      .where("users.id = :userId", { userId })
+      .leftJoinAndSelect("chat.users", "all_users")
+      .select(["chat", "all_users.userName"])
+      .orderBy("chat.id", "DESC");
+
     return await query.getMany();
   }
 
@@ -89,5 +120,27 @@ export class ChatsService {
   async dropTable() {
     const query = this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").delete();
     return await query.execute();
+  }
+
+  async getChatsInSidebar(user: User): Promise<ChatInSidebar[]> {
+    const chats = await this.getChatsForUser(user.id);
+    let res: ChatInSidebar[] = [];
+    chats.forEach((chat: Chat) => {
+      if (chat.users[0].userName == user.userName) {
+        res.push({
+          userName: chat.users[1].userName,
+          lastMessageText: "chat.lastMessageText",
+        });
+      } else {
+        res.push({
+          userName: chat.users[0].userName,
+          lastMessageText: "chat.lastMessageText",
+        });
+      }
+    });
+
+    console.log("🚀 ~ ChatsService ~ getChatsInSidebar ~ res:", res);
+
+    return res;
   }
 }
