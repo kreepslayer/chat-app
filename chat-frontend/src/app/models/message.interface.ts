@@ -1,6 +1,9 @@
+import type { Chat } from './chat.interface';
 import { User } from './user.interface';
 export interface Message {
-  text: string;
-  time: string;
-  sender: User;
+  id?: number;
+  message?: string;
+  user?: User;
+  createdAt?: Date;
+  chat: Chat;
 }

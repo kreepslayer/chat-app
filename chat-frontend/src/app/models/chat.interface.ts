@@ -5,4 +5,5 @@ export class Chat {
   id?: number;
   name?: string;
   users?: User[];
+  lastUpdate?: Date;
 }

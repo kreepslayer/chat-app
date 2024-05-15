@@ -29,26 +29,35 @@ export class ChatService {
     return this.socket.fromEvent('chatsInSidebar');
   }
 
-  //TODO: refactor to create by 2 users
-  createChat(chat: Chat) {
-    //TODO: check if chat already exists
-    this.socket.emit('createChat', chat);
-    this.snackbar.open(`Chat ${chat.name} created`, 'Close', {
-      duration: 2000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
-  }
-
   dropTable() {
     this.socket.emit('dropTable');
   }
 
-  sendMessage(message: Message, socket: Socket) {
-    this.socket.emit('sendMessage', message);
+  sendMessage(message: string, chat: Chat) {
+    const newMessage: Message = {
+      message,
+      chat,
+    };
+    this.socket.emit('sendMessage', newMessage);
   }
 
-  getMessage(): Observable<Message> {
+  getNewMessage(): Observable<Message> {
     return this.socket.fromEvent<Message>('newMessage');
+  }
+
+  createChat(user: User) {
+    this.socket.emit('createChat', user);
+  }
+
+  joinChat(userId: number) {
+    this.socket.emit('joinChat', userId);
+  }
+
+  leaveChat() {
+    this.socket.emit('leaveChat');
+  }
+
+  getChatMessages(): Observable<Message[]> {
+    return this.socket.fromEvent<Message[]>('messages');
   }
 }
