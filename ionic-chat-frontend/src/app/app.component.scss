@@ -1,0 +1,12 @@
+ion-app {
+    background: url(../assets/imgs/background/img.jpg) no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    min-height: 100vh;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

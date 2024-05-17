@@ -1,0 +1,64 @@
+<ion-content>
+    <div class="wrapper">
+        <div class="wrapper2">
+            <div class="title-container">
+                <ion-text color="primary" class="chatapp-title"
+                    >Chat App</ion-text
+                >
+            </div>
+            <form #form="ngForm" (ngSubmit)="onSubmit()">
+                <ion-card>
+                    <ion-item>
+                        <ion-label position="floating">Username</ion-label>
+                        <ion-input
+                            type="text"
+                            name="userName"
+                            ngModel
+                            required
+                            #usernameInput="ngModel"
+                        ></ion-input>
+                    </ion-item>
+                    <ion-text
+                        color="danger"
+                        *ngIf="!usernameInput.valid && usernameInput.touched"
+                        >Enter your username.</ion-text
+                    >
+                    <ion-item>
+                        <ion-label position="floating">Password</ion-label>
+                        <ion-input
+                            #passwordInput="ngModel"
+                            ngModel
+                            type="password"
+                            name="password"
+                            required
+                        ></ion-input>
+                    </ion-item>
+                    <ion-text
+                        color="danger"
+                        *ngIf="!passwordInput.valid && passwordInput.touched"
+                        >Please enter your password.</ion-text
+                    >
+                    <ion-button
+                        [disabled]="!form.valid"
+                        type="submit"
+                        shape="round"
+                        expand="block"
+                    >
+                        {{ submissionType === 'login' ? 'Sign in' : 'Join' }}
+                    </ion-button>
+                </ion-card>
+            </form>
+            <div class="toggle-text">
+                {{ submissionType === 'login' ? 'New to Chat App' : 'Already on
+                Chat App' }}
+                <ion-text
+                    class="toggle-auth-mode"
+                    (click)="toggleText()"
+                    color="primary"
+                >
+                    {{submissionType === 'login' ? 'Join now' : 'Sign in'}}
+                </ion-text>
+            </div>
+        </div>
+    </div>
+</ion-content>

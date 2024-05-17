@@ -1,0 +1,56 @@
+<ion-header class="ion-container ion-no-border">
+    <ion-toolbar class="new-background-color">
+        <div class="toolbar-wrapper">
+            <ion-buttons slot="start">
+                <ion-button>
+                    <ion-icon
+                        color="primary"
+                        name="chatbubbles-outline"
+                        class="chatbubbles-outline"
+                    ></ion-icon>
+                </ion-button>
+            </ion-buttons>
+            <ion-grid>
+                <ion-row class="ion-justify-content-end">
+                    <ion-col size="auto">
+                        <ion-icon
+                            color="primary"
+                            name="people-outline"
+                        ></ion-icon>
+                    </ion-col>
+                    <ion-col size="auto">
+                        <ion-icon
+                            color="primary"
+                            name="chatbox-ellipses-outline"
+                        ></ion-icon>
+                    </ion-col>
+                    <ion-col size="auto"
+                        ><ion-icon
+                            name="notifications-outline"
+                            color="primary"
+                        ></ion-icon>
+                        <ion-badge
+                            style="
+                                position: absolute;
+                                margin-left: -10px;
+                                margin-top: -5px;
+                                height: 16px;
+                                width: 16px;
+                                border-radius: 50px;
+                            "
+                        >
+                            2
+                        </ion-badge>
+                    </ion-col>
+                    <ion-col (click)="presentPopover($event)" size="auto">
+                        <ion-avatar>
+                            <ion-img
+                                src="../../../../assets/profile-icon.png"
+                            ></ion-img>
+                        </ion-avatar>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-toolbar>
+</ion-header>

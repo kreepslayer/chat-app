@@ -1,0 +1,7 @@
+{
+  "name": "ionic-chat-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

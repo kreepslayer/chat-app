@@ -1,0 +1,36 @@
+<ion-card class="new-background-color">
+    <ion-card-header>
+        <ion-grid>
+            <ion-row class="ion-align-items-center ion-justify-content-center">
+                <ion-col size="auto">
+                    <ion-avatar>
+                        <ion-img src="../../../../assets/profile-icon.png">
+                        </ion-img>
+                    </ion-avatar>
+                </ion-col>
+                <ion-col> <ion-card-title>John Doe</ion-card-title> </ion-col>
+            </ion-row>
+        </ion-grid>
+        <ion-button
+            expand="block"
+            shape="round"
+            fill="outline"
+            size="small"
+            color="primary"
+        >
+            View Profile
+        </ion-button>
+    </ion-card-header>
+    <ion-card-content class="brd">
+        <ion-card-subtitle color="primary"> Account </ion-card-subtitle>
+        <p class="ion-padding-top">Settings</p>
+        <p class="ion-padding-top">Help</p>
+        <p class="ion-padding-top">Lang</p>
+    </ion-card-content>
+
+    <ion-card-content>
+        <ion-button expand="block" shape="round" (click)="onSignOut()"
+            >Logout</ion-button
+        >
+    </ion-card-content>
+</ion-card>
