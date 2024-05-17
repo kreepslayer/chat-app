@@ -1,15 +1,16 @@
 import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserEntity } from "./users/models/enteties/user.entity";
 import { AuthService } from "./auth/services/auth.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthModule } from "./auth/auth.module";
 import { ChatsModule } from "./chats/chats.module";
 import { LoggerMiddleware } from "./middleware/logger.middleware";
+import { UserEntity } from "./auth/models/user.entity";
+import { APP_FILTER } from "@nestjs/core";
+import { AllExceptionsFilter } from "./core/all-exceptions.filter";
 
 @Module({
   imports: [
@@ -20,17 +21,21 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
       type: "postgres",
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: true,
-      entities: [UserEntity],
+      synchronize: true, // в продакшене выключить(вроде :) )
     }),
-    UsersModule,
-    ChatsModule,
     AuthModule,
+    ChatsModule,
     ConfigModule,
     TypeOrmModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService, JwtService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

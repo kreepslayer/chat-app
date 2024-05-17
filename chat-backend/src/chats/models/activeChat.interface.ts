@@ -1,6 +1,4 @@
-import { User } from "src/users/models/user.interface";
-
-export class activeChat {
+export class ActiveChat {
   id?: number;
   socketId: string;
   userId: number;

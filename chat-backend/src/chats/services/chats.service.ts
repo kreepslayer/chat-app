@@ -1,22 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ChatEntity } from "../models/chat.entety";
-import { Repository, type DeleteResult } from "typeorm";
-import { User } from "src/users/models/user.interface";
+import { ChatEntity } from "../models/chat.entity";
+import { Repository, DeleteResult } from "typeorm";
+import { User } from "src/auth/models/user.class";
 import { Chat } from "../models/chat.interface";
-import { UsersService } from "src/users/service/users.service";
 import { from, map, mergeMap, of, switchMap, take, type Observable } from "rxjs";
 import { log } from "console";
-import { ChatInSidebar } from "../models/ChatInSidebar.interface";
 import { activeChatEntity } from "../models/activeChat.entity";
 import { MessageEntity } from "../models/message.entity";
-import type { activeChat } from "../models/activeChat.interface";
-import type { Message } from "../models/message.interface";
+import { ActiveChat } from "../models/activeChat.interface";
+import { Message } from "../models/message.interface";
 
 @Injectable()
-export class ChatsService {
+export class ChatService {
   constructor(
-    private userService: UsersService,
     @InjectRepository(ChatEntity)
     private readonly chatRepository: Repository<ChatEntity>,
     @InjectRepository(activeChatEntity)
@@ -25,156 +22,43 @@ export class ChatsService {
     private readonly messageRepository: Repository<MessageEntity>,
   ) {}
 
-  // async createChat(chat: Chat, creator: User): Promise<Chat> {
-  //   console.log("🚀 ~ ChatsService ~ createChat ~ creator:", creator);
-  //   console.log("🚀 ~ ChatsService ~ createChat ~ chat:", chat);
-  //   const newChat = await this.addCreator(chat, creator);
-  //   const user = await this.userService.getUserByUserName(chat.users[0].userName);
-  //   if (user == null) throw new Error("User not found");
-  //   newChat.users.push(user);
-  //   newChat.users.splice(0, 1);
-  //   console.log("🚀 ~ ChatsService ~ createChat ~ newChat.users:", newChat.users);
-  //   console.log("🚀 ~ ChatsService ~ createChat ~ newChat:", newChat);
-  //   return this.chatRepository.save(newChat);
-  // }
+  getChat(creatorId: number, friendId: number): Observable<Chat | undefined> {
+    return from(
+      this.chatRepository
+        .createQueryBuilder("chat")
+        .leftJoin("chat.users", "user")
+        .where("user.id = :creatorId", { creatorId })
+        .orWhere("user.id = :friendId", { friendId })
+        .groupBy("chat.id")
+        .having("COUNT(*) > 1")
+        .getOne(),
+    ).pipe(map((chat: Chat) => chat || undefined));
+  }
 
-  createChat(creator: User, user2: User): Observable<Chat> {
-    return this.geyChatBy2Users(creator.id, user2.id).pipe(
+  createChat(creator: User, friend: User): Observable<Chat> {
+    return this.getChat(creator.id, friend.id).pipe(
       switchMap((chat: Chat) => {
-        const isExist = !!chat;
-        if (!isExist) {
-          const newChat: Chat = {
-            users: [creator, user2],
+        const doeschatExist = !!chat;
+        if (!doeschatExist) {
+          const newchat: Chat = {
+            users: [creator, friend],
           };
-          return from(this.chatRepository.save(newChat));
+          return from(this.chatRepository.save(newchat));
         }
         return of(chat);
       }),
     );
   }
 
-  geyChatBy2Users(user1ID: number, user2ID: number): Observable<ChatEntity> {
-    return from(
-      this.chatRepository
-        .createQueryBuilder("chat")
-        .leftJoin("chat.users", "user")
-        .where("user.id = :user1.id", { user1ID })
-        .orWhere("user.id = :user2.id", { user2ID })
-        .groupBy("chat.id")
-        .having("COUNT(*) > 1")
-        .getOne(),
-    );
+  getChatsForUser(userId: number): Observable<Chat[]> {
+    return from(this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "user").where("user.id = :userId", { userId }).orderBy("chat.lastUpdated", "DESC").getMany());
   }
 
-  async addCreator(chat: Chat, creator: User): Promise<Chat> {
-    console.log("🚀 ~ ChatsService ~ addCreator ~ chat:", chat);
-    chat.users.push(creator);
-    return chat;
+  getUsersInChat(chatId: number): Observable<Chat[]> {
+    return from(this.chatRepository.createQueryBuilder("chat").innerJoinAndSelect("chat.users", "user").where("chat.id = :chatId", { chatId }).getMany());
   }
 
-  async addUserToChat(chat: Chat, user: User): Promise<Chat> {
-    console.log("🚀 ~ ChatsService ~ addUserToChat ~ chat:", chat);
-    console.log("🚀 ~ ChatsService ~ addUserToChat ~ user:", user);
-    chat.users.push(user);
-    return chat;
-  }
-
-  async getAllChats(): Promise<Chat[]> {
-    log(`getAllChats`);
-    let allChats = await this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").select(["chat", "user.userName"]).getMany();
-    console.log("🚀 ~ ChatsService ~ getAllChats ~ allChats:", allChats);
-    console.log("users -->");
-    allChats = allChats.map((chat: ChatEntity) => {
-      console.log(
-        chat.users.map((user: User) => {
-          return user.userName;
-        }),
-      );
-      return chat;
-    });
-    return await this.chatRepository.find({
-      relations: ["users"],
-      order: {
-        id: "ASC",
-      },
-    });
-  }
-
-  getChatsForUser(userId: number): Observable<Chat[] | undefined> | undefined {
-    return from(
-      this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "users").where("users.id = :userId", { userId }).orderBy("chat.lastUpdate", "DESC").getMany(),
-    );
-  }
-
-  async getChatsByTwoUsers(user1Name: string, user2Name: string) {
-    const user1 = await this.userService.findByUserName(user1Name);
-    console.log("🚀 ~ ChatsService ~ getChatsByTwoUsers ~ user1:", user1);
-    const user2 = await this.userService.findByUserName(user2Name);
-    console.log("🚀 ~ ChatsService ~ getChatsByTwoUsers ~ user2:", user2);
-    if (!user1 || !user2) {
-      throw new Error("User not found");
-    }
-    console.log("res -->");
-
-    console.log(
-      await this.chatRepository.findOne({
-        where: [
-          {
-            users: [user1, user2],
-          },
-          {
-            users: [user2, user1],
-          },
-        ],
-        relations: ["users"],
-      }),
-    );
-
-    return this.chatRepository.findOne({
-      where: [
-        {
-          users: [user1, user2],
-        },
-        {
-          users: [user2, user1],
-        },
-      ],
-      relations: ["users"],
-    });
-  }
-
-  async dropTable() {
-    const query = this.chatRepository.createQueryBuilder("chat").leftJoinAndSelect("chat.users", "user").delete();
-    return await query.execute();
-  }
-
-  // async getChatsInSidebar(user: User): Promise<ChatInSidebar[]> {
-  //   const chats = await this.getChatsForUser(user.id);
-  //   let res: ChatInSidebar[] = [];
-  //   chats.forEach((chat: Chat) => {
-  //     if (chat.users[0].userName == user.userName) {
-  //       res.push({
-  //         userName: chat.users[1].userName,
-  //         lastMessageText: "chat.lastMessageText",
-  //       });
-  //     } else {
-  //       res.push({
-  //         userName: chat.users[0].userName,
-  //         lastMessageText: "chat.lastMessageText",
-  //       });
-  //     }
-  //   });
-
-  //   console.log("🚀 ~ ChatsService ~ getChatsInSidebar ~ res:", res);
-
-  //   return res;
-  // }
-
-  getUsersInChat(ChatID: number): Observable<Chat[]> {
-    return from(this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "users").where("chat.id = :ChatID", { ChatID }).getMany());
-  }
-
-  getChatsWithUser(userId: number): Observable<Chat[]> {
+  getChatsWithUsers(userId: number): Observable<Chat[]> {
     return this.getChatsForUser(userId).pipe(
       take(1),
       switchMap((chats: Chat[]) => chats),
@@ -184,24 +68,36 @@ export class ChatsService {
     );
   }
 
-  joinChat(userId: number, user2Id: number, socketId: string): Observable<activeChat> {
-    return this.geyChatBy2Users(userId, user2Id).pipe(
+  joinChat(friendId: number, userId: number, socketId: string): Observable<ActiveChat> {
+    return this.getChat(userId, friendId).pipe(
       switchMap((chat: Chat) => {
         if (!chat) {
-          console.warn(`chat don't exists for userID ${userId} and user2ID ${user2Id}`);
+          console.warn(`No chat exists for userId: ${userId} and friendId: ${friendId}`);
           return of();
         }
         const chatId = chat.id;
-        return from(this.activeChatRepository.findOne({ where: { userId } })).pipe(
-          switchMap((activeChat: activeChat) => {
+        return from(this.activeChatRepository.findOne({ where: [{ userId }] })).pipe(
+          switchMap((activeChat: ActiveChat) => {
             if (activeChat) {
               return from(this.activeChatRepository.delete({ userId })).pipe(
                 switchMap(() => {
-                  return from(this.activeChatRepository.save({ socketId, userId, chatId }));
+                  return from(
+                    this.activeChatRepository.save({
+                      socketId,
+                      userId,
+                      chatId,
+                    }),
+                  );
                 }),
               );
             } else {
-              return from(this.activeChatRepository.save({ socketId, userId, chatId }));
+              return from(
+                this.activeChatRepository.save({
+                  socketId,
+                  userId,
+                  chatId,
+                }),
+              );
             }
           }),
         );
@@ -213,24 +109,7 @@ export class ChatsService {
     return from(this.activeChatRepository.delete({ socketId }));
   }
 
-  //for messages
-  createMessage(message: Message): Observable<Message> {
-    return from(this.messageRepository.save(message));
-  }
-
-  getMessages(chatID: number): Observable<Message[]> {
-    return from(
-      this.messageRepository
-        .createQueryBuilder("message")
-        .innerJoinAndSelect("message.user", "user")
-        .where("message.conversation.id =:chatID", { chatID })
-        .orderBy("message.createdAt", "ASC")
-        .getMany(),
-    );
-  }
-
-  //for active users
-  getActiveUsers(chatId: number): Observable<activeChat[]> {
+  getActiveUsers(chatId: number): Observable<ActiveChat[]> {
     return from(
       this.activeChatRepository.find({
         where: [{ chatId }],
@@ -238,8 +117,23 @@ export class ChatsService {
     );
   }
 
-  // Note: В продакшне удалять по хорошему :)
-  removeActiveChat() {
+  createMessage(message: Message): Observable<Message> {
+    return from(this.messageRepository.save(message));
+  }
+
+  getMessages(chatId: number): Observable<Message[]> {
+    return from(
+      this.messageRepository
+        .createQueryBuilder("message")
+        .innerJoinAndSelect("message.user", "user")
+        .where("message.chat.id =:chatId", { chatId })
+        .orderBy("message.createdAt", "ASC")
+        .getMany(),
+    );
+  }
+
+  // Note: Would remove below in production - helper methods
+  removeActiveChats() {
     return from(this.activeChatRepository.createQueryBuilder().delete().execute());
   }
 

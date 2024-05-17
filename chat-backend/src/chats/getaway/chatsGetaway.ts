@@ -1,44 +1,39 @@
-import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayDisconnect } from "@nestjs/websockets";
-import { Socket, Server } from "socket.io";
-import { UnauthorizedException, UseGuards, type OnModuleInit } from "@nestjs/common";
+import { OnModuleInit, UseGuards } from "@nestjs/common";
+import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { of, Subscription, take, tap } from "rxjs";
+import { Server, Socket } from "socket.io";
+
+import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { User } from "src/auth/models/user.class";
 import { AuthService } from "src/auth/services/auth.service";
-import { UsersService } from "src/users/service/users.service";
-import { ChatsService } from "../services/chats.service";
-import { Chat } from "../models/chat.interface";
-import { User } from "src/users/models/user.interface";
-import { log } from "console";
-import type { Message } from "../models/message.interface";
-import { of, take, tap, type Observable, type Subscription } from "rxjs";
-import { JwtAuthGuard } from "src/auth/guards/jwt.guard";
-import { activeChat } from "../models/activeChat.interface";
-@WebSocketGateway({
-  cors: {
-    origin: ["*", "http://localhost:4200", "http://localhost:3000"],
-  },
-  // namespace: "/chats",
-})
-export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
-  @WebSocketServer()
-  server: Server;
+import { ActiveChat } from "../models/activeChat.interface";
+import { Message } from "../models/message.interface";
+import { ChatService } from "../services/chats.service";
+
+@WebSocketGateway({ cors: { origin: ["http://localhost:8100"] } })
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit {
   constructor(
     private authService: AuthService,
-    private usersService: UsersService,
-    private chatsService: ChatsService,
+    private chatService: ChatService,
   ) {}
+
+  // Note: Runs when server starts - Remove in production
   onModuleInit() {
-    this.chatsService.removeActiveChat().pipe(take(1)).subscribe();
-    this.chatsService.removeMessages().pipe(take(1)).subscribe();
-    this.chatsService.removeChats().pipe(take(1)).subscribe();
+    this.chatService.removeActiveChats().pipe(take(1)).subscribe();
+    this.chatService.removeMessages().pipe(take(1)).subscribe();
+    this.chatService.removeChats().pipe(take(1)).subscribe();
   }
 
-  //FIXME не работает(через раз)
-  // @UseGuards(JwtAuthGuard)
+  @WebSocketServer()
+  server: Server;
+
+  @UseGuards(JwtGuard)
   handleConnection(socket: Socket) {
     console.log("HANDLE CONNECTION");
     const jwt = socket.handshake.headers.authorization || null;
-    this.authService.getJWTuser(jwt).subscribe((user: User) => {
+    this.authService.getJwtUser(jwt).subscribe((user: User) => {
       if (!user) {
-        console.warn("No USER");
+        console.log("No USER");
         this.handleDisconnect(socket);
       } else {
         socket.data.user = user;
@@ -48,30 +43,20 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect, O
   }
 
   getChats(socket: Socket, userId: number): Subscription {
-    return this.chatsService.getChatsWithUser(userId).subscribe(chats => {
-      this.server.to(socket.id).emit("chats", chats);
+    return this.chatService.getChatsWithUsers(userId).subscribe(chat => {
+      this.server.to(socket.id).emit("chats", chat);
     });
   }
 
   handleDisconnect(socket: Socket) {
-    console.warn("HANDLE DISCONNECT");
-    this.chatsService.leaveChat(socket.id).pipe(take(1)).subscribe();
+    console.log("HANDLE DISCONNECT");
+    this.chatService.leaveChat(socket.id).pipe(take(1)).subscribe();
   }
 
-  private disconnect(socket: Socket) {
-    socket.emit("ERROR", new UnauthorizedException());
-    socket.disconnect();
-  }
-
-  @SubscribeMessage("dropTable")
-  async DropTable(socket: Socket) {
-    return await this.chatsService.dropTable();
-  }
   @SubscribeMessage("createChat")
-  createChat(socket: Socket, user: User) {
-    //there user(from properties) is 2nd user to create chat with
-    this.chatsService
-      .createChat(socket.data.user, user)
+  createChat(socket: Socket, friend: User) {
+    this.chatService
+      .createChat(socket.data.user, friend)
       .pipe(take(1))
       .subscribe(() => {
         this.getChats(socket, socket.data.user.id);
@@ -80,26 +65,23 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect, O
 
   @SubscribeMessage("sendMessage")
   handleMessage(socket: Socket, newMessage: Message) {
-    if (!newMessage.chat) {
-      return of(null);
-    }
+    if (!newMessage.chat) return of(null);
 
     const { user } = socket.data;
-
     newMessage.user = user;
 
     if (newMessage.chat.id) {
-      this.chatsService
+      this.chatService
         .createMessage(newMessage)
         .pipe(take(1))
         .subscribe((message: Message) => {
           newMessage.id = message.id;
 
-          this.chatsService
+          this.chatService
             .getActiveUsers(newMessage.chat.id)
             .pipe(take(1))
-            .subscribe((activeChats: activeChat[]) => {
-              activeChats.forEach((activeChat: activeChat) => {
+            .subscribe((activeChats: ActiveChat[]) => {
+              activeChats.forEach((activeChat: ActiveChat) => {
                 this.server.to(activeChat.socketId).emit("newMessage", newMessage);
               });
             });
@@ -108,12 +90,12 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect, O
   }
 
   @SubscribeMessage("joinChat")
-  joinChat(socket: Socket, userId: number) {
-    this.chatsService
-      .joinChat(userId, socket.data.user.id, socket.id)
+  joinChat(socket: Socket, friendId: number) {
+    this.chatService
+      .joinChat(friendId, socket.data.user.id, socket.id)
       .pipe(
-        tap((activeChat: activeChat) => {
-          this.chatsService
+        tap((activeChat: ActiveChat) => {
+          this.chatService
             .getMessages(activeChat.chatId)
             .pipe(take(1))
             .subscribe((messages: Message[]) => {
@@ -127,6 +109,6 @@ export class ChatsGetaway implements OnGatewayConnection, OnGatewayDisconnect, O
 
   @SubscribeMessage("leaveChat")
   leaveChat(socket: Socket) {
-    this.chatsService.leaveChat(socket.id).pipe(take(1)).subscribe();
+    this.chatService.leaveChat(socket.id).pipe(take(1)).subscribe();
   }
 }

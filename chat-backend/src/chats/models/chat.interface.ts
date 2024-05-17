@@ -1,11 +1,7 @@
-import { UserEntity } from "src/users/models/enteties/user.entity";
-import { User } from "src/users/models/user.interface";
-import type { Message } from "./message.interface";
+import { User } from "src/auth/models/user.class";
 
-export class Chat {
+export interface Chat {
   id?: number;
-  name?: string;
   users?: User[];
-  // messages?: Message[];
-  lastUpdate?: Date;
+  lastUpdated?: Date;
 }

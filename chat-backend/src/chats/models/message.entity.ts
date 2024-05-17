@@ -1,8 +1,8 @@
+import { UserEntity } from "src/auth/models/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ChatEntity } from "./chat.entety";
-import { UserEntity } from "src/users/models/enteties/user.entity";
+import { ChatEntity } from "./chat.entity";
 
-@Entity("messages")
+@Entity("message")
 export class MessageEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,10 +10,10 @@ export class MessageEntity {
   @Column()
   message: string;
 
-  @ManyToOne(() => UserEntity, user => user.messages)
+  @ManyToOne(() => UserEntity, userEntity => userEntity.messages)
   user: UserEntity;
 
-  @ManyToOne(() => ChatEntity, chat => chat.messages)
+  @ManyToOne(() => ChatEntity, ChatEntity => ChatEntity.messages)
   chat: ChatEntity;
 
   @CreateDateColumn()
