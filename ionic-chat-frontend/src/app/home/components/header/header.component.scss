@@ -49,3 +49,13 @@ ion-header {
     border-radius: 10px;
     margin-left: .5vw;
 }
+
+app-popover {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    --ion-background: transparent !important
+}

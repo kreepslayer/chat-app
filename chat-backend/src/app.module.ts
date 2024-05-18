@@ -11,6 +11,7 @@ import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { UserEntity } from "./auth/models/user.entity";
 import { APP_FILTER } from "@nestjs/core";
 import { AllExceptionsFilter } from "./core/all-exceptions.filter";
+import { FeedModule } from "./feed/feed.module";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AllExceptionsFilter } from "./core/all-exceptions.filter";
     ChatsModule,
     ConfigModule,
     TypeOrmModule,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [

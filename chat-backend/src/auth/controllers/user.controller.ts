@@ -73,6 +73,7 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Post("friend-request/send/:receiverId")
   sendFriendRequest(@Param("receiverId") receiverStringId: string, @Request() req): Observable<FriendRequest | { error: string }> {
+    console.log("send friend request from", req.user, "to", receiverStringId, " id");
     const receiverId = parseInt(receiverStringId);
     return this.userService.sendFriendRequest(receiverId, req.user);
   }
@@ -80,6 +81,7 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Get("friend-request/status/:receiverId")
   getFriendRequestStatus(@Param("receiverId") receiverStringId: string, @Request() req): Observable<FriendRequestStatus> {
+    console.log("get friend request status for", req.user, receiverStringId);
     const receiverId = parseInt(receiverStringId);
     return this.userService.getFriendRequestStatus(receiverId, req.user);
   }
@@ -87,6 +89,7 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Put("friend-request/response/:friendRequestId")
   respondToFriendRequest(@Param("friendRequestId") friendRequestStringId: string, @Body() statusResponse: FriendRequestStatus): Observable<FriendRequestStatus> {
+    console.log("respond to friend request", friendRequestStringId, statusResponse);
     const friendRequestId = parseInt(friendRequestStringId);
     return this.userService.respondToFriendRequest(statusResponse.status, friendRequestId);
   }
@@ -94,12 +97,15 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Get("friend-request/me/received-requests")
   getFriendRequestsFromRecipients(@Request() req): Observable<FriendRequestStatus[]> {
+    console.log("get friend requests from", req.user);
     return this.userService.getFriendRequestsFromRecipients(req.user);
   }
 
   @UseGuards(JwtGuard)
   @Get("friends/my")
   getFriends(@Request() req): Observable<User[]> {
+    console.log("get friends from", req.user);
+    console.log("get friends for", req.user);
     return this.userService.getFriends(req.user);
   }
 }

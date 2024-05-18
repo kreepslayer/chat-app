@@ -2,7 +2,7 @@
     <ion-toolbar class="new-background-color">
         <div class="toolbar-wrapper">
             <ion-buttons slot="start">
-                <ion-button>
+                <ion-button style="cursor: pointer" routerLink="/home">
                     <ion-icon
                         color="primary"
                         name="chatbubbles-outline"
@@ -12,7 +12,14 @@
             </ion-buttons>
             <ion-grid>
                 <ion-row class="ion-justify-content-end">
-                    <ion-col size="auto">
+                    <ion-col
+                        size="auto"
+                        (click)="
+                            this.connectionProfileService.friendRequests
+                                ?.length > 0 &&
+                                presentFriendRequestPopover($event)
+                        "
+                    >
                         <ion-icon
                             color="primary"
                             name="people-outline"
@@ -39,7 +46,10 @@
                                 border-radius: 50px;
                             "
                         >
-                            2
+                            {{
+                                this.connectionProfileService.friendRequests
+                                    ?.length || 0
+                            }}
                         </ion-badge>
                     </ion-col>
                     <ion-col (click)="presentPopover($event)" size="auto">

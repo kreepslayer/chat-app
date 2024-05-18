@@ -51,7 +51,8 @@ export class ChatService {
   }
 
   getChatsForUser(userId: number): Observable<Chat[]> {
-    return from(this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "user").where("user.id = :userId", { userId }).orderBy("chat.lastUpdated", "DESC").getMany());
+    console.log("getChatsForUser, id->", userId);
+    return from(this.chatRepository.createQueryBuilder("chat").leftJoin("chat.users", "user").where("user.id = :userId", { userId }).orderBy("chat.lastUpdate", "DESC").getMany());
   }
 
   getUsersInChat(chatId: number): Observable<Chat[]> {

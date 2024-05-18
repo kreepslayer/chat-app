@@ -16,7 +16,7 @@ form {
 
     ion-card {
         box-shadow: none;
-        border: 1px solid var(--ion-color-primary);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         padding: 24px;
 
         ion-button {
@@ -52,4 +52,42 @@ ion-label {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+ion-card {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border-radius: 10px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    ion-item {
+        --background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border-radius: 10px;
+        margin-top: 16px;
+        height: 75px;
+        display: flex;
+        align-items: center;
+        width: 99%;
+        font-size: 18px;
+    }
+
+    ion-button {
+        width: 80%;
+    }
+
+    ion-label {
+        margin-bottom: 2px !important;
+        font-size: 16 px;
+    }
 }

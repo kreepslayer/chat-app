@@ -11,10 +11,17 @@ import { ChatComponent } from './components/chat/chat.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from '../auth/services/auth-interceptor.service';
+import { FriendRequestsPopoverComponent } from './components/header/friend-requests-popover/friend-requests-popover.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
-    declarations: [HomePage, HeaderComponent, PopoverComponent, ChatComponent],
+    declarations: [
+        HomePage,
+        HeaderComponent,
+        PopoverComponent,
+        ChatComponent,
+        FriendRequestsPopoverComponent,
+    ],
     providers: [
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         {

@@ -37,16 +37,47 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 .my-custom-class .popover-content {
-    width: 300px;
-    margin-top: 16px;
+    --width: 300px;
+    --margin-top: 16px;
     --box-shadow: none;
     --background: none;
+    --background: transparent !important;
+    --border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    --backdrop-filter: blur(10px) !important;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
+    --color: #fff !important;
+    --border-radius: 10px !important;
+    --ion-background: transparent !important
 }
 
-.background-image {
-    --background: url(./assets/imgs/background/img.jpg) 0 0/100% 100% no-repeat !important;
+ion-content {
+    --background: url("./assets/imgs/background/img.jpg") no-repeat center center / cover;
 }
 
-body {
-    --background: url(./assets/imgs/background/img.jpg) 0 0/100% 100% no-repeat !important;
+* {
+    --inner-border-width: 0px;
+}
+
+app-popover {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    --ion-background: transparent !important;
+}
+
+ion-popover {
+    margin-top: 16px;
+    margin-left: -5px;
+    --box-shadow: none;
+    --background: none;
+    --background: transparent !important;
+    --border: 2px solid rgba(255, 255, 255, 0.7) !important;
+    --backdrop-filter: blur(90px) !important;
+    --box-shadow: 0 0 10px rgba(0, 0, 0, .7) !important;
+    --color: #fff !important;
+    --border-radius: 10px !important;
+    --ion-background: transparent !important
 }

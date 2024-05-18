@@ -11,3 +11,8 @@ ion-card-content p {
 .brd {
     border-bottom: 1px solid var(--ion-color-primary);
 }
+
+ion-card {
+    background: none;
+    box-shadow: none;
+}

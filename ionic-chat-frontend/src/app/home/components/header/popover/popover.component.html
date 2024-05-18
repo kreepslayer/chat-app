@@ -1,4 +1,4 @@
-<ion-card class="new-background-color">
+<ion-card>
     <ion-card-header>
         <ion-grid>
             <ion-row class="ion-align-items-center ion-justify-content-center">
@@ -8,7 +8,9 @@
                         </ion-img>
                     </ion-avatar>
                 </ion-col>
-                <ion-col> <ion-card-title>John Doe</ion-card-title> </ion-col>
+                <ion-col>
+                    <ion-card-title>{{ fullName }}</ion-card-title>
+                </ion-col>
             </ion-row>
         </ion-grid>
         <ion-button
