@@ -65,6 +65,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   @SubscribeMessage("sendMessage")
   handleMessage(socket: Socket, newMessage: Message) {
+    console.log("back send message works");
+
+    console.log("🚀 ~ ChatGateway ~ handleMessage ~ newMessage:", newMessage);
     if (!newMessage.chat) return of(null);
 
     const { user } = socket.data;

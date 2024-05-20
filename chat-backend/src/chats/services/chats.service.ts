@@ -119,6 +119,7 @@ export class ChatService {
   }
 
   createMessage(message: Message): Observable<Message> {
+    console.log("🚀 ~ ChatService ~ createMessage ~ message:", message);
     return from(this.messageRepository.save(message));
   }
 

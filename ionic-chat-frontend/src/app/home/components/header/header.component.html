@@ -12,17 +12,11 @@
             </ion-buttons>
             <ion-grid>
                 <ion-row class="ion-justify-content-end">
-                    <ion-col
-                        size="auto"
-                        (click)="
-                            this.connectionProfileService.friendRequests
-                                ?.length > 0 &&
-                                presentFriendRequestPopover($event)
-                        "
-                    >
+                    <ion-col size="auto">
                         <ion-icon
                             color="primary"
                             name="people-outline"
+                            (click)="goToFriends()"
                         ></ion-icon>
                     </ion-col>
                     <ion-col size="auto">
@@ -31,7 +25,13 @@
                             name="chatbox-ellipses-outline"
                         ></ion-icon>
                     </ion-col>
-                    <ion-col size="auto"
+                    <ion-col
+                        size="auto"
+                        (click)="
+                            this.connectionProfileService.friendRequests
+                                ?.length > 0 &&
+                                presentFriendRequestPopover($event)
+                        "
                         ><ion-icon
                             name="notifications-outline"
                             color="primary"

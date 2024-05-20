@@ -20,9 +20,9 @@ export class ChatComponent {
     userFullImagePath: string;
     userId: number;
 
-    conversations$: Observable<Chat[]>;
-    conversations: Chat[] = [];
-    conversation: Chat;
+    chats$: Observable<Chat[]>;
+    chats: Chat[] = [];
+    chat: Chat;
 
     newMessage$: Observable<string>;
     messages: Message[] = [];
@@ -31,12 +31,12 @@ export class ChatComponent {
     friend: User;
     friend$: BehaviorSubject<User> = new BehaviorSubject<User>({});
 
-    selectedConversationIndex: number = 0;
+    selectedChatIndex: number = 0;
 
     private userImagePathSubscription: Subscription;
     private userIdSubscription: Subscription;
     private messagesSubscription: Subscription;
-    private conversationSubscription: Subscription;
+    private chatSubscription: Subscription;
     private newMessagesSubscription: Subscription;
     private friendsSubscription: Subscription;
     private friendSubscription: Subscription;
@@ -49,11 +49,17 @@ export class ChatComponent {
     ionViewDidEnter() {
         console.log(
             123,
-            this.selectedConversationIndex,
-            this.conversations,
-            this.conversation,
+            'chatIndex->',
+            this.selectedChatIndex,
+            'chats->',
+            this.chats,
+            'chat->',
+            this.chat,
+            'messages->',
             this.messages,
+            'friends->',
             this.friends,
+            'friend->,',
             this.friend
         );
 
@@ -70,10 +76,10 @@ export class ChatComponent {
             }
         );
 
-        this.conversationSubscription = this.chatService
+        this.chatSubscription = this.chatService
             .getChats()
-            .subscribe((conversations: Chat[]) => {
-                this.conversations.push(conversations[0]); // Note: from mergeMap stream
+            .subscribe((chats: Chat[]) => {
+                this.chats.push(chats[0]); // Note: from mergeMap stream
             });
 
         this.messagesSubscription = this.chatService
@@ -127,11 +133,12 @@ export class ChatComponent {
 
     onSubmit() {
         const { message } = this.form.value;
+        console.log('🚀 ~ ChatComponent ~ onSubmit ~ message:', message);
         if (!message) return;
 
         let conversationUserIds = [this.userId, this.friend.id].sort();
 
-        this.conversations.forEach((conversation: Chat) => {
+        this.chats.forEach((conversation: Chat) => {
             let userIds = conversation.users
                 .map((user: User) => user.id)
                 .sort();
@@ -139,16 +146,16 @@ export class ChatComponent {
             if (
                 JSON.stringify(conversationUserIds) === JSON.stringify(userIds)
             ) {
-                this.conversation = conversation;
+                this.chat = conversation;
             }
         });
 
-        this.chatService.sendMessage(message, this.conversation);
+        this.chatService.sendMessage(message, this.chat);
         this.form.reset();
     }
 
     openConversation(friend: User, index: number): void {
-        this.selectedConversationIndex = index;
+        this.selectedChatIndex = index;
 
         this.chatService.leaveChat();
 
@@ -175,9 +182,9 @@ export class ChatComponent {
     ionViewDidLeave() {
         this.chatService.leaveChat();
 
-        this.selectedConversationIndex = 0;
-        this.conversations = [];
-        this.conversation = undefined;
+        this.selectedChatIndex = 0;
+        this.chats = [];
+        this.chat = undefined;
         this.messages = [];
         this.friends = [];
         this.friend = undefined;
@@ -185,7 +192,7 @@ export class ChatComponent {
         this.messagesSubscription.unsubscribe();
         this.userImagePathSubscription.unsubscribe();
         this.userIdSubscription.unsubscribe();
-        this.conversationSubscription.unsubscribe();
+        this.chatSubscription.unsubscribe();
         this.newMessagesSubscription.unsubscribe();
         this.friendsSubscription.unsubscribe();
         this.friendSubscription.unsubscribe();

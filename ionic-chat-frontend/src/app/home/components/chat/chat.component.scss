@@ -53,6 +53,10 @@
         .chat-messages {
             overflow-y: scroll;
             height: calc(100% - 140px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
         }
 
         form {
@@ -147,4 +151,14 @@ ion-item {
 
 ion-input {
     --background: transparent !;
+}
+
+.message {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border-radius: 10px;
+    width: 98%;
 }

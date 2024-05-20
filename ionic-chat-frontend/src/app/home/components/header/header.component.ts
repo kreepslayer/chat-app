@@ -7,6 +7,7 @@ import { FriendRequest } from '../../models/FriendRequest';
 import { ConnectionProfileService } from '../../services/connection-profile.service';
 import { FriendRequestsPopoverComponent } from './friend-requests-popover/friend-requests-popover.component';
 import { PopoverComponent } from './popover/popover.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-header',
@@ -23,7 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     constructor(
         public popoverController: PopoverController,
         private authService: AuthService,
-        public connectionProfileService: ConnectionProfileService
+        public connectionProfileService: ConnectionProfileService,
+        public router: Router
     ) {}
 
     ngOnInit() {
@@ -87,5 +89,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.userImagePathSubscription.unsubscribe();
         this.friendRequestsSubscription.unsubscribe();
+    }
+
+    goToFriends() {
+        this.router.navigate(['/home/friends']);
     }
 }

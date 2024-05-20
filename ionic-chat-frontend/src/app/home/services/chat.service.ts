@@ -21,11 +21,15 @@ export class ChatService {
         );
     }
 
-    sendMessage(message: string, conversation: Chat): void {
+    sendMessage(message: string, chat: Chat): void {
         const newMessage: Message = {
             message,
-            conversation,
+            chat,
         };
+        console.log(
+            '🚀 ~ ChatService(front) ~ sendMessage ~ newMessage:',
+            newMessage
+        );
         this.socket.emit('sendMessage', newMessage);
     }
 
