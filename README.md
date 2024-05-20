@@ -14,3 +14,29 @@ Stack:
 [<img src = "./MDicons/node-js.svg" height = "50px"/>](https://nodejs.org/en)
 
 ## How to run it ?
+
+### Firstly clone the repo
+1. Backend
+```shell
+cd chat-backend 
+```
+```shell
+npm install 
+```
+- Create .env file in root and paste there:
+    - JWT_SECRET = ``` your generated JWT Secret ```
+    - DATABASE_URL = ``` your database (postgres) link ``` *I recommend use [neon tech](https://neon.tech/)*
+```shell
+npm run start dev
+```
+2. Frontend
+```shell
+cd ionic-chat-frontend
+```
+```shell
+npm install
+```
+```shell 
+ionic serve
+```
+---
