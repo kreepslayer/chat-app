@@ -135,15 +135,15 @@ export class ChatService {
   }
 
   // Note: Would remove below in production - helper methods
-  removeActiveChats() {
-    return from(this.activeChatRepository.createQueryBuilder().delete().execute());
-  }
+  // removeActiveChats() {
+  //   return from(this.activeChatRepository.createQueryBuilder().delete().execute());
+  // }
 
-  removeMessages() {
-    return from(this.messageRepository.createQueryBuilder().delete().execute());
-  }
+  // removeMessages() {
+  //   return from(this.messageRepository.createQueryBuilder().delete().execute());
+  // }
 
-  removeChats() {
-    return from(this.chatRepository.createQueryBuilder().delete().execute());
-  }
+  // removeChats() {
+  //   return from(this.chatRepository.createQueryBuilder().delete().execute());
+  // }
 }

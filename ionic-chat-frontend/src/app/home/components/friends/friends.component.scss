@@ -9,7 +9,7 @@
     box-shadow: none;
     margin: auto;
     margin-top: 70px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background: transparent;
 
     @media (max-width: 800px) {
@@ -40,7 +40,7 @@
         display: flex;
 
 
-        &:hover {
+        friend:hover {
             background: transparent;
             backdrop-filter: blur(50px);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);

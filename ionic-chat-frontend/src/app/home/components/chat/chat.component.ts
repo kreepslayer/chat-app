@@ -46,6 +46,16 @@ export class ChatComponent {
         private authService: AuthService
     ) {}
 
+    scrollToBottom() {
+        let chat = document.querySelector('.chat');
+        let last: HTMLElement | null = document.querySelector('#endOFChat');
+        if (last && chat) {
+            document.querySelector('#endOFChat')?.scrollIntoView({
+                behavior: 'smooth',
+            });
+        }
+    }
+
     ionViewDidEnter() {
         console.log(
             123,
@@ -93,6 +103,8 @@ export class ChatComponent {
                         this.messages.push(message);
                     }
                 });
+
+                this.scrollToBottom();
             });
 
         this.newMessagesSubscription = this.chatService
@@ -152,6 +164,9 @@ export class ChatComponent {
 
         this.chatService.sendMessage(message, this.chat);
         this.form.reset();
+        setTimeout(() => {
+            this.scrollToBottom();
+        }, 500);
     }
 
     openConversation(friend: User, index: number): void {
@@ -163,6 +178,9 @@ export class ChatComponent {
         this.friend$.next(this.friend);
 
         this.messages = [];
+        setTimeout(() => {
+            this.scrollToBottom();
+        }, 350);
     }
 
     deriveFullImagePath(user: User): string {

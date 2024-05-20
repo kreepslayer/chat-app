@@ -94,4 +94,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     goToFriends() {
         this.router.navigate(['/home/friends']);
     }
+    goToChats() {
+        this.router.navigate(['/home']);
+    }
 }

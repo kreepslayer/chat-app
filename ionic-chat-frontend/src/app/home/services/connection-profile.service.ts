@@ -30,6 +30,7 @@ export class ConnectionProfileService {
     addConnectionUser(
         id: number
     ): Observable<FriendRequest | { error: string }> {
+        console.log('add connection user', id);
         return this.http.post<FriendRequest | { error: string }>(
             `${environment.baseApiUrl}/user/friend-request/send/${id}`,
             {},
@@ -52,5 +53,10 @@ export class ConnectionProfileService {
             { status: statusResponse },
             this.httpOptions
         );
+    }
+
+    getAllUsers(): Observable<User[]> {
+        console.log('get all users');
+        return this.http.get<User[]>(`${environment.baseApiUrl}/user`);
     }
 }

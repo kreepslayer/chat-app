@@ -4,12 +4,12 @@
     max-height: 100%;
     justify-content: center;
     gap: 20px;
-    height: 98vh;
+    height: 100vh;
     width: 100vw;
     box-shadow: none;
     margin: auto;
     margin-top: 70px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     background: transparent;
 
     @media (max-width: 800px) {
@@ -17,6 +17,11 @@
     }
 
     .select-connection {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
         overflow-y: scroll;
         width: 13.5%;
         background: transparent;
@@ -26,17 +31,27 @@
         color: #fff;
         border-radius: 10px;
 
-        .friend {
-            border-left: 4px solid transparent;
-
-            &:hover {
-                background-color: #fff;
-                cursor: pointer;
-            }
+        .selected-conversation {
+            background: transparent;
+            backdrop-filter: blur(50px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.5s ease;
         }
 
-        .selected-conversation {
-            border-left: 4px solid green;
+        .friend {
+            transition: all 0.5s ease;
+            width: 90%;
+
+            &:hover {
+                background: transparent;
+                backdrop-filter: blur(50px);
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                cursor: pointer;
+                border-radius: 10px;
+                transition: all 0.5s ease;
+            }
         }
     }
 
@@ -60,6 +75,7 @@
         }
 
         form {
+            padding-top: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,7 +128,6 @@
 
 .top-panel {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     height: 60px;
@@ -128,6 +143,20 @@
         padding: 10px;
         display: flex;
         flex-direction: column;
+    }
+
+    .friend-avatar-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: inherit;
+            object-position: inherit;
+        }
     }
 }
 
@@ -161,4 +190,8 @@ ion-input {
     color: #fff;
     border-radius: 10px;
     width: 98%;
+}
+
+.header-list {
+    width: 100%;
 }

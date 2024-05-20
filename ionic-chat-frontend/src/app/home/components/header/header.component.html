@@ -16,6 +16,7 @@
                         <ion-icon
                             color="primary"
                             name="people-outline"
+                            style="cursor: pointer"
                             (click)="goToFriends()"
                         ></ion-icon>
                     </ion-col>
@@ -23,6 +24,8 @@
                         <ion-icon
                             color="primary"
                             name="chatbox-ellipses-outline"
+                            (click)="goToChats()"
+                            style="cursor: pointer"
                         ></ion-icon>
                     </ion-col>
                     <ion-col
@@ -35,6 +38,7 @@
                         ><ion-icon
                             name="notifications-outline"
                             color="primary"
+                            style="cursor: pointer"
                         ></ion-icon>
                         <ion-badge
                             style="
@@ -55,7 +59,8 @@
                     <ion-col (click)="presentPopover($event)" size="auto">
                         <ion-avatar>
                             <ion-img
-                                src="../../../../assets/profile-icon.png"
+                                *ngIf="userFullImagePath"
+                                [src]="userFullImagePath"
                             ></ion-img>
                         </ion-avatar>
                     </ion-col>

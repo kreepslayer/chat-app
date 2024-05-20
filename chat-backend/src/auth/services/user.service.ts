@@ -163,4 +163,8 @@ export class UserService {
       }),
     );
   }
+
+  getAllUsers(): Observable<User[]> {
+    return from(this.userRepository.find());
+  }
 }

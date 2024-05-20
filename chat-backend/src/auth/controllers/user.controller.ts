@@ -108,4 +108,11 @@ export class UserController {
     console.log("get friends for", req.user);
     return this.userService.getFriends(req.user);
   }
+
+  @UseGuards(JwtGuard)
+  @Get()
+  getAllUsers(@Request() req): Observable<User[]> {
+    console.log("get all users from", req.user);
+    return this.userService.getAllUsers();
+  }
 }

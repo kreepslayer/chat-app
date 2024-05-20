@@ -19,9 +19,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   // Note: Runs when server starts - Remove in production
   onModuleInit() {
-    this.chatService.removeActiveChats().pipe(take(1)).subscribe();
-    this.chatService.removeMessages().pipe(take(1)).subscribe();
-    this.chatService.removeChats().pipe(take(1)).subscribe();
+    // this.chatService.removeActiveChats().pipe(take(1)).subscribe();
+    // this.chatService.removeMessages().pipe(take(1)).subscribe();
+    // this.chatService.removeChats().pipe(take(1)).subscribe();
   }
 
   @WebSocketServer()

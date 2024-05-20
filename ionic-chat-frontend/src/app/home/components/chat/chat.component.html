@@ -1,8 +1,10 @@
 <ion-card class="container">
     <div class="select-connection">
-        <div class="top-panel">
-            <div class="heading">
-                <ion-text color="light">Messaging</ion-text>
+        <div class="header-list">
+            <div class="top-panel">
+                <div class="heading">
+                    <ion-text color="light">Messaging</ion-text>
+                </div>
             </div>
         </div>
         <div
@@ -53,6 +55,24 @@
                     friend?.userName || "Loading..."
                 }}</ion-text>
             </div>
+            <div class="friend-avatar">
+                <ion-avatar class="friend-avatar-img">
+                    <ion-img
+                        *ngIf="friend?.imagePath"
+                        [src]="
+                            'http://localhost:3000/api/feed/image/' +
+                            friend?.imagePath
+                        "
+                    ></ion-img>
+
+                    <ion-img
+                        *ngIf="!friend?.imagePath"
+                        [src]="
+                            'http://localhost:3000/api/feed/image/blank-profile-picture.png'
+                        "
+                    ></ion-img>
+                </ion-avatar>
+            </div>
         </div>
         <ion-grid class="chat-messages">
             <ion-row
@@ -76,6 +96,7 @@
                     <p>{{ message.message }}</p>
                 </ion-col>
             </ion-row>
+            <div id="endOFChat" style="height: 1px; width: 1px"></div>
         </ion-grid>
         <form #form="ngForm" (ngSubmit)="onSubmit()">
             <input
