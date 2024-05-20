@@ -1,17 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { User } from "../../users/models/user.interfase";
+import { UserEntity } from "src/auth/models/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ChatEntity } from "./chat.entity";
 
-@Entity()
+@Entity("message")
 export class MessageEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  sender: string;
+  message: string;
 
-  @Column()
-  text: string;
+  @ManyToOne(() => UserEntity, userEntity => userEntity.messages)
+  user: UserEntity;
 
-  @Column() // Change the type to 'timestamp'
-  time: string;
+  @ManyToOne(() => ChatEntity, ChatEntity => ChatEntity.messages)
+  chat: ChatEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

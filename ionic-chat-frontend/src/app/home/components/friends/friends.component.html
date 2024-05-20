@@ -1,0 +1,111 @@
+<ion-card class="container">
+    <div class="friends-list">
+        <div class="top-panel">
+            <div class="heading">
+                <ion-text color="light">Your Friends</ion-text>
+            </div>
+        </div>
+        <div class="friend" *ngFor="let friend of friends">
+            <ion-grid>
+                <ion-row
+                    class="ion-align-items-center ion-justify-content-center"
+                >
+                    <ion-col size="auto">
+                        <ion-avatar>
+                            <ion-img
+                                *ngIf="
+                                    friend.imagePath;
+                                    else blankProfilePicture
+                                "
+                                [src]="
+                                    'http://localhost:3000/api/feed/image/' +
+                                    friend.imagePath
+                                "
+                            ></ion-img>
+
+                            <ng-template #blankProfilePicture>
+                                <ion-img
+                                    [src]="
+                                        'http://localhost:3000/api/feed/image/blank-profile-picture.png'
+                                    "
+                                ></ion-img>
+                            </ng-template>
+                        </ion-avatar>
+                    </ion-col>
+                    <ion-col>
+                        <ion-card-title>{{ friend.userName }} </ion-card-title>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </div>
+    <div class="add-friend">
+        <div class="top-panel">
+            <div class="heading">
+                <div class="search">
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        (focus)="focus()"
+                        (focusout)="focusout()"
+                        id="search"
+                    />
+                    <i
+                        class="bx bx-search-alt-2"
+                        style="cursor: pointer"
+                        (click)="searchFriends()"
+                    ></i>
+                </div>
+            </div>
+        </div>
+        <div class="friends-main">
+            <div class="Searchedfriend" *ngFor="let friend of searchedFriends">
+                <ion-grid>
+                    <ion-row
+                        class="ion-align-items-center ion-justify-content-space-around"
+                    >
+                        <ion-col>
+                            <div class="info">
+                                <ion-avatar>
+                                    <ion-img
+                                        *ngIf="
+                                            friend.imagePath;
+                                            else blankProfilePicture
+                                        "
+                                        [src]="
+                                            'http://localhost:3000/api/feed/image/' +
+                                            friend.imagePath
+                                        "
+                                    ></ion-img>
+
+                                    <ng-template #blankProfilePicture>
+                                        <ion-img
+                                            [src]="
+                                                'http://localhost:3000/api/feed/image/blank-profile-picture.png'
+                                            "
+                                        ></ion-img>
+                                    </ng-template>
+                                </ion-avatar>
+                                <ion-card-title
+                                    >{{ friend.userName }}
+                                </ion-card-title>
+                            </div>
+                        </ion-col>
+                        <ion-col size="auto">
+                            <ion-button
+                                expand="block"
+                                shape="round"
+                                fill="outline"
+                                size="small"
+                                color="primary"
+                                (click)="addFriend(friend)"
+                            >
+                                Add
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
+        </div>
+    </div>
+</ion-card>

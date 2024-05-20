@@ -1,0 +1,18 @@
+.new-background-color {
+    --background: transparent !important;
+    --border: 0 !important;
+    margin: 0 !important;
+}
+
+ion-card-content p {
+    cursor: pointer;
+}
+
+.brd {
+    border-bottom: 1px solid var(--ion-color-primary);
+}
+
+ion-card {
+    background: none;
+    box-shadow: none;
+}

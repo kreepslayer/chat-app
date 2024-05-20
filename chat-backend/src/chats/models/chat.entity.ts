@@ -1,19 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { User } from "../../users/models/user.interfase";
-import { Message } from "./message.interface";
+import { UserEntity } from "src/auth/models/user.entity";
+import { Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
-
-@Entity()
+@Entity("chat")
 export class ChatEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  User1Name: string;
+  @ManyToMany(() => UserEntity)
+  @JoinTable()
+  users: UserEntity[];
 
-  @Column()
-  User2Name: string;
+  @OneToMany(() => MessageEntity, message => message.chat)
+  messages: MessageEntity[];
 
-  @Column("text", { array: true, default: [], nullable: true })
-  Messages: string[];
+  @UpdateDateColumn()
+  lastUpdate: Date;
 }

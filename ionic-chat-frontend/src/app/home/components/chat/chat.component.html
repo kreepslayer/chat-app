@@ -1,0 +1,114 @@
+<ion-card class="container">
+    <div class="select-connection">
+        <div class="header-list">
+            <div class="top-panel">
+                <div class="heading">
+                    <ion-text color="light">Messaging</ion-text>
+                </div>
+            </div>
+        </div>
+        <div
+            *ngFor="let friend of friends; let i = index"
+            (click)="openConversation(friend, i)"
+            class="friend"
+            [ngClass]="{
+                'selected-conversation': selectedChatIndex === i
+            }"
+        >
+            <ion-grid>
+                <ion-row
+                    class="ion-align-items-center ion-justify-content-center"
+                >
+                    <ion-col size="auto">
+                        <ion-avatar>
+                            <ion-img
+                                *ngIf="
+                                    friend.imagePath;
+                                    else blankProfilePicture
+                                "
+                                [src]="
+                                    'http://localhost:3000/api/feed/image/' +
+                                    friend.imagePath
+                                "
+                            ></ion-img>
+
+                            <ng-template #blankProfilePicture>
+                                <ion-img
+                                    [src]="
+                                        'http://localhost:3000/api/feed/image/blank-profile-picture.png'
+                                    "
+                                ></ion-img>
+                            </ng-template>
+                        </ion-avatar>
+                    </ion-col>
+                    <ion-col>
+                        <ion-card-title>{{ friend.userName }} </ion-card-title>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </div>
+    <div class="chat">
+        <div class="top-panel">
+            <div class="friend-name-role">
+                <ion-text style="font-weight: 500" color="light">{{
+                    friend?.userName || "Loading..."
+                }}</ion-text>
+            </div>
+            <div class="friend-avatar">
+                <ion-avatar class="friend-avatar-img">
+                    <ion-img
+                        *ngIf="friend?.imagePath"
+                        [src]="
+                            'http://localhost:3000/api/feed/image/' +
+                            friend?.imagePath
+                        "
+                    ></ion-img>
+
+                    <ion-img
+                        *ngIf="!friend?.imagePath"
+                        [src]="
+                            'http://localhost:3000/api/feed/image/blank-profile-picture.png'
+                        "
+                    ></ion-img>
+                </ion-avatar>
+            </div>
+        </div>
+        <ion-grid class="chat-messages">
+            <ion-row
+                *ngFor="let message of messages"
+                class="ion-align-items-center ion-justify-content-center message"
+            >
+                <ion-col size="auto">
+                    <ion-avatar>
+                        <ion-img
+                            [src]="deriveFullImagePath(message.user)"
+                        ></ion-img>
+                    </ion-avatar>
+                </ion-col>
+                <ion-col>
+                    <p>
+                        <span style="font-weight: 500">{{
+                            message.user.userName
+                        }}</span>
+                        - {{ message.createdAt | date : "short" }}
+                    </p>
+                    <p>{{ message.message }}</p>
+                </ion-col>
+            </ion-row>
+            <div id="endOFChat" style="height: 1px; width: 1px"></div>
+        </ion-grid>
+        <form #form="ngForm" (ngSubmit)="onSubmit()">
+            <input
+                ngModel
+                type="text"
+                name="message"
+                placeholder="Write a message..."
+                required
+            />
+            <button [disabled]="!form.valid" type="submit">
+                <i class="bx bx-send"></i>
+            </button>
+        </form>
+    </div>
+</ion-card>

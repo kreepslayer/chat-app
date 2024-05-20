@@ -1,8 +1,7 @@
-import { User } from "../../users/models/user.interfase";
-import { Message } from "./message.interface";
+import { User } from "src/auth/models/user.class";
 
 export interface Chat {
-  User1Name?: string;
-  User2Name?: string;
-  Messages?: string[];
+  id?: number;
+  users?: User[];
+  lastUpdated?: Date;
 }

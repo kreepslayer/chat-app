@@ -1,14 +1,17 @@
-import { Module, MiddlewareConsumer, NestModule, RequestMethod } from "@nestjs/common";
+import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { userModule } from "./users/users.module";
-import { LoggerMiddleware } from "./middleware/logger.middleware";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { chatsModule } from "./chats/chats.module";
-import { UserEntity } from "./users/models/user.entity";
-import { ChatEntity } from "./chats/models/chat.entity";
-import { MessageEntity } from "./chats/models/message.entity";
+import { AuthService } from "./auth/services/auth.service";
+import { JwtService } from "@nestjs/jwt";
+import { AuthModule } from "./auth/auth.module";
+import { ChatsModule } from "./chats/chats.module";
+import { LoggerMiddleware } from "./middleware/logger.middleware";
+import { UserEntity } from "./auth/models/user.entity";
+import { APP_FILTER } from "@nestjs/core";
+import { AllExceptionsFilter } from "./core/all-exceptions.filter";
+import { FeedModule } from "./feed/feed.module";
 
 @Module({
   imports: [
@@ -17,27 +20,27 @@ import { MessageEntity } from "./chats/models/message.entity";
     }),
     TypeOrmModule.forRoot({
       type: "postgres",
-      url: process.env.DATABASE1_URL,
+      url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: true,
-      entities: [UserEntity, ChatEntity, MessageEntity],
+      synchronize: true, // в продакшене выключить(вроде :) )
     }),
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      url: process.env.DATABASE2_URL,
-      autoLoadEntities: true,
-      synchronize: true,
-      entities: [UserEntity, ChatEntity, MessageEntity],
-    }),
-    userModule,
-    chatsModule,
+    AuthModule,
+    ChatsModule,
+    ConfigModule,
+    TypeOrmModule,
+    FeedModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({ path: "users", method: RequestMethod.ALL });
-    consumer.apply(LoggerMiddleware).forRoutes({ path: "chats", method: RequestMethod.ALL });
+    consumer.apply(LoggerMiddleware).forRoutes({ path: "*", method: RequestMethod.ALL });
   }
 }
