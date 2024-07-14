@@ -20,8 +20,7 @@ export class FriendsComponent implements OnInit {
 
     friends: User[] = [];
     friend$: BehaviorSubject<User> = new BehaviorSubject<User>({});
-
-    private friendsSubscription: Subscription;
+    friendsSubscription: Subscription;
 
     ngOnInit() {
         this.allUsersSubscription = this.connectionProfileService

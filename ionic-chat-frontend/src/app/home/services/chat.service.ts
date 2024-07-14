@@ -56,4 +56,8 @@ export class ChatService {
     getChats(): Observable<Chat[]> {
         return this.socket.fromEvent<Chat[]>('chats');
     }
+
+    getSavedChats(): Observable<Chat[]> {
+        return this.socket.fromEvent<Chat[]>('savedChats');
+    }
 }

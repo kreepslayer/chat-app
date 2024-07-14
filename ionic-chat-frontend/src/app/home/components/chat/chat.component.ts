@@ -101,6 +101,7 @@ export class ChatComponent {
                     );
                     if (!allMessageIds.includes(message.id)) {
                         this.messages.push(message);
+                        this.scrollToBottom();
                     }
                 });
 
@@ -117,6 +118,7 @@ export class ChatComponent {
                 );
                 if (!allMessageIds.includes(message.id)) {
                     this.messages.push(message);
+                    this.scrollToBottom();
                 }
             });
 

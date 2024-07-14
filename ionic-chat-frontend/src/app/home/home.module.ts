@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from '../auth/services/auth-interceptor.service';
 import { FriendRequestsPopoverComponent } from './components/header/friend-requests-popover/friend-requests-popover.component';
 import { FriendsComponent } from './components/friends/friends.component';
+import { SavedComponent } from './components/saved/saved.component';
 
 @NgModule({
     imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
@@ -23,6 +24,7 @@ import { FriendsComponent } from './components/friends/friends.component';
         ChatComponent,
         FriendRequestsPopoverComponent,
         FriendsComponent,
+        SavedComponent,
     ],
     providers: [
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

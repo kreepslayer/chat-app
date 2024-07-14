@@ -97,4 +97,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     goToChats() {
         this.router.navigate(['/home']);
     }
+    goToSaved() {
+        this.router.navigate(['/home/saved']);
+    }
 }

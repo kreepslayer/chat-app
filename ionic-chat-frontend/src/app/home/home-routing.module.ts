@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomePage } from './home.page';
 import { ChatComponent } from './components/chat/chat.component';
 import { FriendsComponent } from './components/friends/friends.component';
+import { SavedComponent } from './components/saved/saved.component';
 
 const routes: Routes = [
     {
@@ -19,6 +20,8 @@ const routes: Routes = [
             //     component: ChatComponent,
             // },
             { path: 'friends', component: FriendsComponent },
+            { path: 'saved', component: SavedComponent },
+            { path: '**', redirectTo: '' },
         ],
     },
 ];

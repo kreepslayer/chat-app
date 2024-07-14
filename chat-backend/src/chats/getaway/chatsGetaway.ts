@@ -114,4 +114,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   leaveChat(socket: Socket) {
     this.chatService.leaveChat(socket.id).pipe(take(1)).subscribe();
   }
+
+  //TODO
+  // @SubscribeMessage("savedChats")
+  // savedChats(socket: Socket) {
+  //   this.chatService.getSavedChats(socket, socket.data.user.id);
+  // }
 }
